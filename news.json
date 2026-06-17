@@ -1,13 +1,13 @@
 {
   "items": [
     {
-      "id": "уникальный-id",
-      "title": "Заголовок новости",
+      "id": "1",
+      "title": "Сайт форка ModLEX",
       "date": "2026-06-17",
-      "summary": "Короткий текст для карточки",
-      "image": "https://ВАШ_USERNAME.github.io/modlex-site/news/картинка.png",
-      "url": "куда ведёт клик по карточке",
-      "body": "необязательно — полный текст, если понадобится показывать его целиком"
+      "summary": "Появление своего сайта у проекта ModLEX app",
+      "image": "https://github.com/GUSSIak/GUSSIak.github.io/blob/main/news/news1.png",
+      "url": "https://gussiak.github.io/",
+      "body": "-"
     }
   ]
 }
