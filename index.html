@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ModLEX — лаунчер Minecraft</title>
+<meta name="description" content="ModLEX — форк Modrinth App с дополнительными настройками." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #14171c;
+    --surface: #1b1f26;
+    --surface-2: #20242c;
+    --text: #ece8e1;
+    --muted: #8b9099;
+    --accent: #d98e3f;
+    --accent-dim: #b97432;
+    --divider: #2a2f37;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', system-ui, sans-serif;
+    line-height: 1.5;
+  }
+  .wrap { max-width: 960px; margin: 0 auto; padding: 0 1.5rem; }
+
+  header.hero {
+    position: relative;
+    padding: 6rem 0 4rem;
+    overflow: hidden;
+    background-image:
+      linear-gradient(var(--bg), var(--bg)),
+      repeating-linear-gradient(0deg, rgba(217,142,63,0.05) 0 1px, transparent 1px 32px),
+      repeating-linear-gradient(90deg, rgba(217,142,63,0.05) 0 1px, transparent 1px 32px);
+  }
+  .eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    text-transform: uppercase;
+  }
+  h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    margin: 0.5rem 0 0.75rem;
+    letter-spacing: -0.01em;
+  }
+  .lede {
+    color: var(--muted);
+    font-size: 1.05rem;
+    max-width: 38ch;
+    margin: 0 0 2rem;
+  }
+  .downloads { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+  .btn {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    text-decoration: none;
+    color: var(--text);
+    background: var(--surface);
+    border: 1px solid var(--divider);
+    padding: 0.7rem 1.1rem;
+    border-radius: 0.4rem;
+    transition: border-color 0.15s, transform 0.15s;
+  }
+  .btn:hover { border-color: var(--accent); transform: translateY(-1px); }
+  .btn.primary { background: var(--accent); border-color: var(--accent); color: #1a1207; font-weight: 600; }
+  .btn.primary:hover { background: var(--accent-dim); }
+  .btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  section.news { padding: 3rem 0 5rem; }
+  section.news h2 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.5rem;
+    border-bottom: 1px solid var(--divider);
+    padding-bottom: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+  .news-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.25rem;
+  }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--divider);
+    border-radius: 0.6rem;
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    transition: border-color 0.15s;
+  }
+  .card:hover { border-color: var(--accent); }
+  .card img { width: 100%; aspect-ratio: 16/9; object-fit: cover; background: var(--surface-2); }
+  .card .body { padding: 1rem 1.1rem 1.25rem; }
+  .card .date {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--accent);
+    letter-spacing: 0.04em;
+  }
+  .card h3 { margin: 0.4rem 0 0.4rem; font-size: 1.05rem; }
+  .card p { margin: 0; color: var(--muted); font-size: 0.9rem; }
+  .news-empty { color: var(--muted); font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; }
+
+  footer {
+    border-top: 1px solid var(--divider);
+    padding: 2rem 0;
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="eyebrow">Mod + Alex</p>
+    <h1>ModLEX</h1>
+    <p class="lede">Форк Modrinth App с дополнительными настройками лаунчера. Тот же движок, своя надстройка.</p>
+    <div class="downloads">
+      <a class="btn primary" href="https://github.com/YOUR_USERNAME/YOUR_APP_REPO/releases/latest">Скачать последнюю версию</a>
+      <a class="btn" href="https://github.com/YOUR_USERNAME/YOUR_APP_REPO">Исходный код на GitHub</a>
+    </div>
+  </div>
+</header>
+
+<section class="news">
+  <div class="wrap">
+    <h2>Новости</h2>
+    <div id="news-grid" class="news-grid">
+      <p class="news-empty">Загрузка…</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">ModLEX — основан на открытом коде Modrinth App.</div>
+</footer>
+
+<script>
+  // news.json лежит в этой же папке сайта — поэтому fetch идёт
+  // с того же домена, никакой настройки CORS не требуется.
+  fetch('news.json')
+    .then((r) => r.json())
+    .then((data) => {
+      const grid = document.getElementById('news-grid');
+      const items = data.items || [];
+      if (items.length === 0) {
+        grid.innerHTML = '<p class="news-empty">Пока нет новостей.</p>';
+        return;
+      }
+      grid.innerHTML = items.map((item) => `
+        <a class="card" href="${item.url || '#'}" target="_blank" rel="noopener">
+          ${item.image ? `<img src="${item.image}" alt="${item.title}">` : ''}
+          <div class="body">
+            <span class="date">${item.date || ''}</span>
+            <h3>${item.title}</h3>
+            <p>${item.summary || ''}</p>
+          </div>
+        </a>
+      `).join('');
+    })
+    .catch(() => {
+      document.getElementById('news-grid').innerHTML =
+        '<p class="news-empty">Не удалось загрузить новости.</p>';
+    });
+</script>
+
+</body>
+</html>
