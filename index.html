@@ -32,6 +32,7 @@
     overflow-x: hidden;
   }
 
+  /* ===== ЖИВОЙ ФОН С СЕТКОЙ ===== */
   #bg-canvas {
     position: fixed;
     top: 0;
@@ -40,9 +41,10 @@
     height: 100%;
     z-index: 0;
     pointer-events: none;
-    opacity: 0.4;
+    opacity: 1;
   }
 
+  /* ===== ОСНОВНОЙ КОНТЕНТ ===== */
   .wrap {
     max-width: 960px;
     margin: 0 auto;
@@ -51,6 +53,7 @@
     z-index: 1;
   }
 
+  /* ===== HERO ===== */
   header.hero {
     position: relative;
     padding: 5rem 0 3.5rem;
@@ -85,6 +88,7 @@
     margin: 0 0 1.5rem;
   }
 
+  /* ===== ВЕРСИИ ===== */
   .version-badge {
     display: flex;
     flex-wrap: wrap;
@@ -148,6 +152,7 @@
     font-size: 0.7rem;
   }
 
+  /* ===== НОВОСТИ ===== */
   section.news {
     padding: 3rem 0 4rem;
   }
@@ -221,6 +226,7 @@
     padding: 2rem 0;
   }
 
+  /* ===== FOOTER ===== */
   footer {
     border-top: 1px solid var(--divider);
     padding: 2rem 0;
@@ -239,6 +245,7 @@
     text-decoration: underline;
   }
 
+  /* ===== АНИМАЦИИ ===== */
   @keyframes fadeInUp {
     from { opacity: 0; transform: translateY(30px); }
     to { opacity: 1; transform: translateY(0); }
@@ -255,6 +262,7 @@
 </head>
 <body>
 
+<!-- ===== ЖИВОЙ ФОН ===== -->
 <canvas id="bg-canvas"></canvas>
 
 <header class="hero">
@@ -265,7 +273,7 @@
 
     <div class="version-badge" id="version-badge">
       <span class="badge">GVC: <span class="highlight" id="gvc-version">—</span></span>
-      <span class="badge">Основан на: <span class="highlight" id="modrinth-version">—</span></span>
+      <span class="badge">Основан на Modrinth: <span class="highlight" id="modrinth-version">—</span></span>
       <span class="badge" id="update-status">● Загрузка...</span>
     </div>
 
@@ -306,11 +314,16 @@
 </footer>
 
 <script>
-
+// ============================================================
+// 1. ЖИВОЙ ФОН — СЕТКА С ЛИНИЯМИ И ТОЧКАМИ
+// ============================================================
 (function initBg() {
   const canvas = document.getElementById('bg-canvas');
   const ctx = canvas.getContext('2d');
-  let w, h, dots = [];
+  let w, h;
+  const dots = [];
+  const DOT_COUNT = 120;
+  const CONNECTION_DIST = 160;
 
   function resize() {
     w = canvas.width = window.innerWidth;
@@ -319,23 +332,23 @@
   window.addEventListener('resize', resize);
   resize();
 
-  const DOT_COUNT = 90;
-  const CONNECTION_DIST = 140;
-
   class Dot {
     constructor() {
+      this.reset();
+    }
+    reset() {
       this.x = Math.random() * w;
       this.y = Math.random() * h;
-      this.vx = (Math.random() - 0.5) * 0.4;
-      this.vy = (Math.random() - 0.5) * 0.4;
-      this.radius = Math.random() * 1.8 + 0.5;
-      this.opacity = Math.random() * 0.4 + 0.2;
+      this.vx = (Math.random() - 0.5) * 0.5;
+      this.vy = (Math.random() - 0.5) * 0.5;
+      this.radius = Math.random() * 2 + 1.5;
+      this.opacity = Math.random() * 0.5 + 0.3;
     }
     update() {
       this.x += this.vx;
       this.y += this.vy;
-      if (this.x < 0 || this.x > w) this.vx *= -1;
-      if (this.y < 0 || this.y > h) this.vy *= -1;
+      if (this.x < 0 || this.x > w) { this.vx *= -1; }
+      if (this.y < 0 || this.y > h) { this.vy *= -1; }
     }
     draw() {
       ctx.beginPath();
@@ -345,7 +358,9 @@
     }
   }
 
-  for (let i = 0; i < DOT_COUNT; i++) dots.push(new Dot());
+  for (let i = 0; i < DOT_COUNT; i++) {
+    dots.push(new Dot());
+  }
 
   function drawLines() {
     for (let i = 0; i < dots.length; i++) {
@@ -354,12 +369,12 @@
         const dy = dots[i].y - dots[j].y;
         const dist = Math.hypot(dx, dy);
         if (dist < CONNECTION_DIST) {
-          const alpha = (1 - dist / CONNECTION_DIST) * 0.25;
+          const alpha = (1 - dist / CONNECTION_DIST) * 0.35;
           ctx.beginPath();
           ctx.moveTo(dots[i].x, dots[i].y);
           ctx.lineTo(dots[j].x, dots[j].y);
           ctx.strokeStyle = `rgba(168, 85, 247, ${alpha})`;
-          ctx.lineWidth = 0.8;
+          ctx.lineWidth = 1.2;
           ctx.stroke();
         }
       }
@@ -375,37 +390,46 @@
   }
   animate();
 
+  // Пересоздаём точки при ресайзе
   window.addEventListener('resize', () => {
     resize();
-    dots = [];
-    for (let i = 0; i < DOT_COUNT; i++) dots.push(new Dot());
+    dots.length = 0;
+    for (let i = 0; i < DOT_COUNT; i++) {
+      dots.push(new Dot());
+    }
   });
 })();
 
 
+// ============================================================
+// 2. ЗАГРУЗКА ДАННЫХ ИЗ UPDATES.JSON
+// ============================================================
 async function loadData() {
   try {
     const resp = await fetch('updates.json');
     if (!resp.ok) throw new Error('Network error');
     const data = await resp.json();
 
+    // GVC версия
     const gvcEl = document.getElementById('gvc-version');
     const modrinthEl = document.getElementById('modrinth-version');
     const statusEl = document.getElementById('update-status');
+    const downloadVersionEl = document.getElementById('download-version');
 
     const gvcVersion = data.version || '—';
     gvcEl.textContent = gvcVersion;
 
+    // Версия Modrinth — поле modrinth_base_version
     const modrinthBase = data.modrinth_base_version || '—';
     modrinthEl.textContent = modrinthBase;
 
     statusEl.innerHTML = `● Актуальная версия: <span style="color:var(--accent);">${gvcVersion}</span>`;
 
-    const downloadVersionEl = document.getElementById('download-version');
     if (downloadVersionEl) {
       downloadVersionEl.textContent = `v${gvcVersion}`;
     }
 
+    // Ссылка на скачивание
     const downloadBtn = document.getElementById('download-btn');
     if (data.platforms && data.platforms['windows-x86_64']) {
       const url = data.platforms['windows-x86_64'].url;
@@ -423,6 +447,9 @@ async function loadData() {
   }
 }
 
+// ============================================================
+// 3. ЗАГРУЗКА НОВОСТЕЙ
+// ============================================================
 async function loadNews() {
   const grid = document.getElementById('news-grid');
   try {
