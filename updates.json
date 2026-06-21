@@ -1,11 +1,12 @@
 {
-    "version": "1.3.0",
-    "notes": "Описание обновления",
-    "pub_date": "2026-06-21T12:00:00Z",
-    "platforms": {
-        "windows-x86_64": {
-            "signature": "",
-            "url": "https://github.com/gussiak/ModeLEX/releases/-"
-        }
+  "version": "1.3.0",
+  "modrinth_base_version": "0.14.5",
+  "notes": "Обновление ModLEX",
+  "pub_date": "2026-06-21T12:00:00Z",
+  "platforms": {
+    "windows-x86_64": {
+      "signature": "",
+      "url": "https://github.com/GUSSIak/ModeLEX/releases/-"
     }
+  }
 }
