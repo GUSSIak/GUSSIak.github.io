@@ -7,38 +7,57 @@
 <meta name="description" content="ModLEX — форк Modrinth App c новыми функциями" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #14171c;
-    --surface: #1b1f26;
-    --surface-2: #20242c;
+    --bg: #0b0d10;
+    --surface: #14181f;
+    --surface-2: #1a1f28;
+    --surface-3: #232a35;
     --text: #ece8e1;
     --muted: #8b9099;
-    --accent: #d98e3f;
-    --accent-dim: #b97432;
+    --accent: #a855f7;
+    --accent-dim: #7c3aed;
+    --accent-glow: rgba(168, 85, 247, 0.15);
     --divider: #2a2f37;
   }
-  * { box-sizing: border-box; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
   body {
-    margin: 0;
     background: var(--bg);
     color: var(--text);
     font-family: 'Inter', system-ui, sans-serif;
-    line-height: 1.5;
+    line-height: 1.6;
+    min-height: 100vh;
+    overflow-x: hidden;
   }
-  .wrap { max-width: 960px; margin: 0 auto; padding: 0 1.5rem; }
+
+  #bg-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0.4;
+  }
+
+  .wrap {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+    position: relative;
+    z-index: 1;
+  }
 
   header.hero {
     position: relative;
-    padding: 6rem 0 4rem;
+    padding: 5rem 0 3.5rem;
     overflow: hidden;
-    background-image:
-      linear-gradient(var(--bg), var(--bg)),
-      repeating-linear-gradient(0deg, rgba(217,142,63,0.05) 0 1px, transparent 1px 32px),
-      repeating-linear-gradient(90deg, rgba(217,142,63,0.05) 0 1px, transparent 1px 32px);
+    border-bottom: 1px solid var(--divider);
   }
+
   .eyebrow {
     font-family: 'JetBrains Mono', monospace;
     font-size: 0.8rem;
@@ -46,20 +65,53 @@
     color: var(--accent);
     text-transform: uppercase;
   }
+
   h1 {
     font-family: 'Space Grotesk', sans-serif;
     font-weight: 700;
-    font-size: clamp(2.5rem, 6vw, 4rem);
-    margin: 0.5rem 0 0.75rem;
-    letter-spacing: -0.01em;
+    font-size: clamp(2.8rem, 7vw, 4.5rem);
+    margin: 0.5rem 0 0.5rem;
+    letter-spacing: -0.02em;
+    background: linear-gradient(135deg, #c084fc, #a855f7, #7c3aed);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
+
   .lede {
     color: var(--muted);
     font-size: 1.05rem;
     max-width: 38ch;
-    margin: 0 0 2rem;
+    margin: 0 0 1.5rem;
   }
-  .downloads { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+
+  .version-badge {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+  .badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    background: var(--surface);
+    border: 1px solid var(--divider);
+    padding: 0.3rem 0.8rem;
+    border-radius: 9999px;
+    color: var(--muted);
+  }
+  .badge .highlight {
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  /* ===== КНОПКИ ===== */
+  .downloads {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: center;
+  }
   .btn {
     font-family: 'JetBrains Mono', monospace;
     font-size: 0.85rem;
@@ -67,26 +119,53 @@
     color: var(--text);
     background: var(--surface);
     border: 1px solid var(--divider);
-    padding: 0.7rem 1.1rem;
-    border-radius: 0.4rem;
-    transition: border-color 0.15s, transform 0.15s;
+    padding: 0.7rem 1.3rem;
+    border-radius: 0.5rem;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
   }
-  .btn:hover { border-color: var(--accent); transform: translateY(-1px); }
-  .btn.primary { background: var(--accent); border-color: var(--accent); color: #1a1207; font-weight: 600; }
-  .btn.primary:hover { background: var(--accent-dim); }
-  .btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .btn:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(168, 85, 247, 0.15);
+  }
+  .btn.primary {
+    background: linear-gradient(135deg, var(--accent), var(--accent-dim));
+    border-color: var(--accent);
+    color: #fff;
+    font-weight: 600;
+  }
+  .btn.primary:hover {
+    box-shadow: 0 8px 40px rgba(168, 85, 247, 0.3);
+    transform: translateY(-2px);
+  }
+  .btn .version-tag {
+    font-weight: 400;
+    opacity: 0.7;
+    font-size: 0.7rem;
+  }
 
-  section.news { padding: 3rem 0 5rem; }
+  section.news {
+    padding: 3rem 0 4rem;
+  }
   section.news h2 {
     font-family: 'Space Grotesk', sans-serif;
     font-size: 1.5rem;
     border-bottom: 1px solid var(--divider);
     padding-bottom: 0.75rem;
     margin-bottom: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
   }
   .news-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 1.25rem;
   }
   .card {
@@ -98,83 +177,282 @@
     color: inherit;
     display: flex;
     flex-direction: column;
-    transition: border-color 0.15s;
+    transition: all 0.25s ease;
   }
-  .card:hover { border-color: var(--accent); }
-  .card img { width: 100%; aspect-ratio: 16/9; object-fit: cover; background: var(--surface-2); }
-  .card .body { padding: 1rem 1.1rem 1.25rem; }
+  .card:hover {
+    border-color: var(--accent);
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+  }
+  .card img {
+    width: 100%;
+    aspect-ratio: 16/9;
+    object-fit: cover;
+    background: var(--surface-2);
+  }
+  .card .body {
+    padding: 1rem 1.1rem 1.25rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
   .card .date {
     font-family: 'JetBrains Mono', monospace;
     font-size: 0.7rem;
     color: var(--accent);
     letter-spacing: 0.04em;
   }
-  .card h3 { margin: 0.4rem 0 0.4rem; font-size: 1.05rem; }
-  .card p { margin: 0; color: var(--muted); font-size: 0.9rem; }
-  .news-empty { color: var(--muted); font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; }
+  .card h3 {
+    margin: 0.4rem 0 0.4rem;
+    font-size: 1.05rem;
+    font-weight: 600;
+  }
+  .card p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.9rem;
+    flex: 1;
+  }
+  .news-empty {
+    color: var(--muted);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    text-align: center;
+    padding: 2rem 0;
+  }
 
   footer {
     border-top: 1px solid var(--divider);
     padding: 2rem 0;
     color: var(--muted);
     font-size: 0.85rem;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  footer a {
+    color: var(--accent);
+    text-decoration: none;
+  }
+  footer a:hover {
+    text-decoration: underline;
+  }
+
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .hero, .news { animation: fadeInUp 0.8s ease-out; }
+
+  @media (max-width: 640px) {
+    header.hero { padding: 3rem 0 2.5rem; }
+    .downloads { flex-direction: column; align-items: stretch; }
+    .btn { justify-content: center; }
+    .version-badge { gap: 0.5rem; }
   }
 </style>
 </head>
 <body>
 
+<canvas id="bg-canvas"></canvas>
+
 <header class="hero">
   <div class="wrap">
-    <p class="eyebrow">By Alex | Gussiak</p>
+    <p class="eyebrow">✦ By Alex | Gussiak</p>
     <h1>ModLEX</h1>
     <p class="lede">Форк Modrinth App с дополнительными возможностями и интеграциями</p>
+
+    <div class="version-badge" id="version-badge">
+      <span class="badge">GVC: <span class="highlight" id="gvc-version">—</span></span>
+      <span class="badge">Основан на: <span class="highlight" id="modrinth-version">—</span></span>
+      <span class="badge" id="update-status">● Загрузка...</span>
+    </div>
+
     <div class="downloads">
-      <a class="btn primary" href="https://github.com/GUSSIak/ModeLEX">Скачать последнюю версию(Релиз в ближайшие время)</a>
-      <a class="btn" href="https://github.com/GUSSIak/ModeLEX">Исходный код на GitHub</a>
+      <a class="btn primary" id="download-btn" href="https://github.com/GUSSIak/ModeLEX">
+        ⬇ Скачать <span class="version-tag" id="download-version">v—</span>
+      </a>
+      <a class="btn" href="https://github.com/GUSSIak/ModeLEX">
+        <svg width="18" height="18" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        Исходный код
+      </a>
+      <a class="btn" href="https://github.com/GUSSIak/ModeLEX/releases">
+        📦 Релизы
+      </a>
     </div>
   </div>
 </header>
 
 <section class="news">
   <div class="wrap">
-    <h2>Новости</h2>
+    <h2>
+      <span>📰 Новости</span>
+      <a href="https://github.com/GUSSIak/ModeLEX/releases" style="font-family:'JetBrains Mono',monospace;font-size:0.8rem;color:var(--accent);text-decoration:none;font-weight:400;">
+        Все релизы →
+      </a>
+    </h2>
     <div id="news-grid" class="news-grid">
-      <p class="news-empty">Загрузка…</p>
+      <p class="news-empty">⏳ Загрузка новостей...</p>
     </div>
   </div>
 </section>
 
 <footer>
-  <div class="wrap">ModLEX — основан на открытом коде Modrinth App.</div>
+  <div class="wrap" style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:0.5rem;">
+    <span>ModLEX — основан на открытом коде <a href="https://modrinth.com/app" target="_blank">Modrinth App</a>.</span>
+    <span>Сделано с ❤️ для Minecraft-сообщества</span>
+  </div>
 </footer>
 
 <script>
-  // news.json лежит в этой же папке сайта — поэтому fetch идёт
-  // с того же домена, никакой настройки CORS не требуется.
-  fetch('news.json')
-    .then((r) => r.json())
-    .then((data) => {
-      const grid = document.getElementById('news-grid');
-      const items = data.items || [];
-      if (items.length === 0) {
-        grid.innerHTML = '<p class="news-empty">Пока нет новостей.</p>';
-        return;
+
+(function initBg() {
+  const canvas = document.getElementById('bg-canvas');
+  const ctx = canvas.getContext('2d');
+  let w, h, dots = [];
+
+  function resize() {
+    w = canvas.width = window.innerWidth;
+    h = canvas.height = window.innerHeight;
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  const DOT_COUNT = 90;
+  const CONNECTION_DIST = 140;
+
+  class Dot {
+    constructor() {
+      this.x = Math.random() * w;
+      this.y = Math.random() * h;
+      this.vx = (Math.random() - 0.5) * 0.4;
+      this.vy = (Math.random() - 0.5) * 0.4;
+      this.radius = Math.random() * 1.8 + 0.5;
+      this.opacity = Math.random() * 0.4 + 0.2;
+    }
+    update() {
+      this.x += this.vx;
+      this.y += this.vy;
+      if (this.x < 0 || this.x > w) this.vx *= -1;
+      if (this.y < 0 || this.y > h) this.vy *= -1;
+    }
+    draw() {
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(168, 85, 247, ${this.opacity})`;
+      ctx.fill();
+    }
+  }
+
+  for (let i = 0; i < DOT_COUNT; i++) dots.push(new Dot());
+
+  function drawLines() {
+    for (let i = 0; i < dots.length; i++) {
+      for (let j = i + 1; j < dots.length; j++) {
+        const dx = dots[i].x - dots[j].x;
+        const dy = dots[i].y - dots[j].y;
+        const dist = Math.hypot(dx, dy);
+        if (dist < CONNECTION_DIST) {
+          const alpha = (1 - dist / CONNECTION_DIST) * 0.25;
+          ctx.beginPath();
+          ctx.moveTo(dots[i].x, dots[i].y);
+          ctx.lineTo(dots[j].x, dots[j].y);
+          ctx.strokeStyle = `rgba(168, 85, 247, ${alpha})`;
+          ctx.lineWidth = 0.8;
+          ctx.stroke();
+        }
       }
-      grid.innerHTML = items.map((item) => `
-        <a class="card" href="${item.url || '#'}" target="_blank" rel="noopener">
-          ${item.image ? `<img src="${item.image}" alt="${item.title}">` : ''}
-          <div class="body">
-            <span class="date">${item.date || ''}</span>
-            <h3>${item.title}</h3>
-            <p>${item.summary || ''}</p>
-          </div>
-        </a>
-      `).join('');
-    })
-    .catch(() => {
-      document.getElementById('news-grid').innerHTML =
-        '<p class="news-empty">Не удалось загрузить новости.</p>';
-    });
+    }
+  }
+
+  function animate() {
+    ctx.clearRect(0, 0, w, h);
+    dots.forEach(d => d.update());
+    dots.forEach(d => d.draw());
+    drawLines();
+    requestAnimationFrame(animate);
+  }
+  animate();
+
+  window.addEventListener('resize', () => {
+    resize();
+    dots = [];
+    for (let i = 0; i < DOT_COUNT; i++) dots.push(new Dot());
+  });
+})();
+
+
+async function loadData() {
+  try {
+    const resp = await fetch('updates.json');
+    if (!resp.ok) throw new Error('Network error');
+    const data = await resp.json();
+
+    const gvcEl = document.getElementById('gvc-version');
+    const modrinthEl = document.getElementById('modrinth-version');
+    const statusEl = document.getElementById('update-status');
+
+    const gvcVersion = data.version || '—';
+    gvcEl.textContent = gvcVersion;
+
+    const modrinthBase = data.modrinth_base_version || '—';
+    modrinthEl.textContent = modrinthBase;
+
+    statusEl.innerHTML = `● Актуальная версия: <span style="color:var(--accent);">${gvcVersion}</span>`;
+
+    const downloadVersionEl = document.getElementById('download-version');
+    if (downloadVersionEl) {
+      downloadVersionEl.textContent = `v${gvcVersion}`;
+    }
+
+    const downloadBtn = document.getElementById('download-btn');
+    if (data.platforms && data.platforms['windows-x86_64']) {
+      const url = data.platforms['windows-x86_64'].url;
+      if (url) {
+        downloadBtn.href = url;
+      }
+    }
+
+    await loadNews();
+
+  } catch (err) {
+    console.warn('Failed to load updates.json:', err);
+    document.getElementById('update-status').textContent = '⚠ Не удалось загрузить версию';
+    await loadNews();
+  }
+}
+
+async function loadNews() {
+  const grid = document.getElementById('news-grid');
+  try {
+    const resp = await fetch('news.json');
+    if (!resp.ok) throw new Error('Network error');
+    const data = await resp.json();
+    const items = data.items || [];
+
+    if (items.length === 0) {
+      grid.innerHTML = '<p class="news-empty">📭 Пока нет новостей.</p>';
+      return;
+    }
+
+    grid.innerHTML = items.map((item) => `
+      <a class="card" href="${item.url || '#'}" target="_blank" rel="noopener">
+        ${item.image ? `<img src="${item.image}" alt="${item.title}" loading="lazy">` : ''}
+        <div class="body">
+          <span class="date">${item.date || ''}</span>
+          <h3>${item.title}</h3>
+          <p>${item.summary || ''}</p>
+        </div>
+      </a>
+    `).join('');
+  } catch (err) {
+    console.warn('Failed to load news.json:', err);
+    grid.innerHTML = '<p class="news-empty">❌ Не удалось загрузить новости.</p>';
+  }
+}
+
+loadData();
 </script>
 
 </body>
