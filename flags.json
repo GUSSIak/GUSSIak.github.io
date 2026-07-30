@@ -1,8 +1,8 @@
 {
 	"flags": {
 		"curseforge_platform": {
-			"enabled": true,
-			"locked": false,
+			"enabled": false,
+			"locked": true,
 			"message": "Эта функция временно отключена разработчиком."
 		}
 	}
