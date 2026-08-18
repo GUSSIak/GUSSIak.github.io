@@ -1,12 +1,12 @@
 {
-  "version": "1.4.0",
+  "version": "1.4.1-beta.1",
   "modrinth_base_version": "0.17.3",
   "notes": "Обновление ModLEX",
-  "pub_date": "2026-07-30",
+  "pub_date": "2026-08-18",
   "platforms": {
     "windows-x86_64": {
       "signature": "",
-      "url": "https://github.com/GUSSIak/ModeLEX/releases"
+      "url": "https://github.com/GUSSIak/ModeLEX/releases/download/v1.4.1-beta.1/ModLEX.App_1.4.1-beta.1_x64-setup.exe"
     }
   }
 }
