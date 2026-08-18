@@ -4,6 +4,9 @@
 			"enabled": false,
 			"locked": true,
 			"message": "Эта функция временно отключена разработчиком."
+		},
+		"beta_tester_gate": {
+			"enabled": false
 		}
 	}
 }
