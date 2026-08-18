@@ -406,7 +406,7 @@
 // ============================================================
 async function loadData() {
   try {
-    const resp = await fetch('updates-beta.json');
+    const resp = await fetch('updates.json');
     if (!resp.ok) throw new Error('Network error');
     const data = await resp.json();
 
