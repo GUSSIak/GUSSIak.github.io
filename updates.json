@@ -1,1 +1,12 @@
-{"version":"1.4.1-beta.5","notes":"","pub_date":"2026-08-21T15:39:57Z","modrinth_base":"0.18.2","platforms":{"windows-x86_64":{"signature":"dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTdmhzUXBpZTdXRHlzdGVLc1d3MUxUWGkzVmxiU244eGUyb1IvNWk5U1Jzb3ovbzJHQlkzYlZoanJTMUZ0dFdqNGxrWHlhMStqTllURTlPMFNCb3p5S0ZFTVRWK3FpbkE0PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg3MzI2NjMxCWZpbGU6TW9kTEVYIEFwcF8xLjQuMS1iZXRhLjVfeDY0LXNldHVwLm5zaXMuemlwCmFJMnFXWWpLYm4wY1JmSG92d1pKTjNKR3U0UFF2ZWRCOVVrQTNWNFRpcnpuNUdjTzlmNUpaWkxvbTRYRjl6WkN3S3ZDMVFpbWZqL21RbWtWYWEyMUJnPT0K","url":"https://github.com/GUSSIak/ModeLEX/releases/download/v1.4.1-beta.5/ModLEX.App_1.4.1-beta.5_x64-setup.nsis.zip"}}}
+{
+  "version": "1.4.1-beta.1",
+  "modrinth_base_version": "0.17.3",
+  "notes": "Обновление ModLEX",
+  "pub_date": "2026-08-18",
+  "platforms": {
+    "windows-x86_64": {
+      "signature": "",
+      "url": "https://github.com/GUSSIak/ModeLEX/releases/download/v1.4.1-beta.1/ModLEX.App_1.4.1-beta.1_x64-setup.exe"
+    }
+  }
+}
