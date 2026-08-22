@@ -9,12 +9,12 @@
 			"enabled": false
 		},
 		"switch_to_stable_channel": {
-			"enabled": false
-			"locked": true
+			"enabled": false,
+			"locked": true,
 			"message": "Доступен пока только бета канал"
 		},
 		"switch_to_beta_channel": {
-			"enabled": false
+			"enabled": false,
 			"locked": true
 		}
 	}
