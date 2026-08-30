@@ -4,7 +4,18 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>ModLEX — лаунчер Minecraft</title>
-<meta name="description" content="ModLEX — форк Modrinth App c новыми функциями" />
+<meta name="description" content="ModLEX — бесплатный форк Modrinth App с открытым кодом: глубокая кастомизация, кастомный Discord Rich Presence и без телеметрии." />
+
+<meta property="og:type" content="website" />
+<meta property="og:title" content="ModLEX — лаунчер Minecraft" />
+<meta property="og:description" content="Бесплатный форк Modrinth App с открытым кодом. Глубокая кастомизация, свой Discord Rich Presence, без телеметрии и рекламы." />
+<meta property="og:image" content="https://gussiak.github.io/assets/screenshots/library.webp" />
+<meta property="og:url" content="https://gussiak.github.io/" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="ModLEX — лаунчер Minecraft" />
+<meta name="twitter:description" content="Бесплатный форк Modrinth App с открытым кодом. Глубокая кастомизация, свой Discord Rich Presence, без телеметрии и рекламы." />
+<meta name="twitter:image" content="https://gussiak.github.io/assets/screenshots/library.webp" />
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -20,6 +31,7 @@
     --accent-dim: #7c3aed;
     --accent-glow: rgba(168, 85, 247, 0.15);
     --divider: #2a2f37;
+    --good: #4ad080;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
@@ -46,19 +58,95 @@
 
   /* ===== ОСНОВНОЙ КОНТЕНТ ===== */
   .wrap {
-    max-width: 960px;
+    max-width: 1080px;
     margin: 0 auto;
     padding: 0 1.5rem;
     position: relative;
     z-index: 1;
   }
 
+  section { padding: 4rem 0; border-bottom: 1px solid var(--divider); }
+  section:last-of-type { border-bottom: none; }
+
+  .section-head { margin-bottom: 2rem; }
+  .section-head h2 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.65rem;
+  }
+  .section-head p {
+    color: var(--muted);
+    font-size: 0.95rem;
+    margin-top: 0.4rem;
+    max-width: 52ch;
+  }
+
+  /* ===== NAV ===== */
+  nav.topnav {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    backdrop-filter: blur(10px);
+    background: rgba(11, 13, 16, 0.75);
+    border-bottom: 1px solid var(--divider);
+  }
+  nav.topnav .wrap {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 0.9rem;
+    padding-bottom: 0.9rem;
+  }
+  .brand {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--text);
+    text-decoration: none;
+  }
+  .navlinks {
+    display: flex;
+    gap: 1.5rem;
+    list-style: none;
+    font-size: 0.88rem;
+  }
+  .navlinks a {
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+  .navlinks a:hover { color: var(--text); }
+  .nav-icons { display: flex; gap: 0.75rem; }
+  .icon-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 0.5rem;
+    border: 1px solid var(--divider);
+    color: var(--muted);
+    transition: all 0.2s ease;
+  }
+  .icon-btn:hover { color: var(--text); border-color: var(--accent); }
+
+  @media (max-width: 720px) {
+    .navlinks { display: none; }
+  }
+
   /* ===== HERO ===== */
   header.hero {
     position: relative;
-    padding: 5rem 0 3.5rem;
+    padding: 4.5rem 0 4rem;
     overflow: hidden;
-    border-bottom: 1px solid var(--divider);
+  }
+  .hero-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 460px);
+    gap: 3rem;
+    align-items: center;
+  }
+  @media (max-width: 900px) {
+    .hero-grid { grid-template-columns: 1fr; }
   }
 
   .eyebrow {
@@ -72,7 +160,7 @@
   h1 {
     font-family: 'Space Grotesk', sans-serif;
     font-weight: 700;
-    font-size: clamp(2.8rem, 7vw, 4.5rem);
+    font-size: clamp(2.6rem, 6vw, 4rem);
     margin: 0.5rem 0 0.5rem;
     letter-spacing: -0.02em;
     background: linear-gradient(135deg, #c084fc, #a855f7, #7c3aed);
@@ -84,7 +172,7 @@
   .lede {
     color: var(--muted);
     font-size: 1.05rem;
-    max-width: 38ch;
+    max-width: 44ch;
     margin: 0 0 1.5rem;
   }
 
@@ -151,112 +239,651 @@
     opacity: 0.7;
     font-size: 0.7rem;
   }
+  .btn.discord { border-color: #5865F2; }
+  .btn.discord:hover { box-shadow: 0 8px 30px rgba(88, 101, 242, 0.25); }
 
-  /* ===== НОВОСТИ ===== */
-  section.news {
-    padding: 3rem 0 4rem;
+  .free-note {
+    margin-top: 1.1rem;
+    font-size: 0.82rem;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
   }
-  section.news h2 {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 1.5rem;
+  .free-note svg { flex-shrink: 0; color: var(--good); }
+
+  /* ===== ОКНО-МОКАП ЛАУНЧЕРА ===== */
+  .app-window {
+    border-radius: 12px;
+    background: var(--surface);
+    border: 1px solid var(--divider);
+    box-shadow: 0 30px 80px rgba(0,0,0,0.55), 0 0 0 1px rgba(168,85,247,0.08);
+    overflow: hidden;
+    transform: perspective(1400px) rotateY(-4deg) rotateX(1deg);
+    transition: transform 0.4s ease;
+  }
+  .app-window:hover { transform: perspective(1400px) rotateY(0deg) rotateX(0deg); }
+  .app-window .titlebar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 0.75rem;
+    background: var(--surface-2);
     border-bottom: 1px solid var(--divider);
-    padding-bottom: 0.75rem;
-    margin-bottom: 1.5rem;
+  }
+  .app-window .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .app-window .dot.r { background: #ff5f57; }
+  .app-window .dot.y { background: #febc2e; }
+  .app-window .dot.g { background: #28c840; }
+  .app-window .addr {
+    flex: 1;
+    margin-left: 0.5rem;
+    height: 20px;
+    border-radius: 5px;
+    background: var(--surface-3);
+  }
+  .app-window img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  /* ===== ФИЧИ ===== */
+  .feature-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 1.25rem;
+  }
+  .feature-card {
+    background: var(--surface);
+    border: 1px solid var(--divider);
+    border-radius: 0.75rem;
+    padding: 1.4rem 1.3rem;
+  }
+  .feature-card .ico {
+    width: 38px;
+    height: 38px;
+    border-radius: 0.6rem;
+    background: var(--accent-glow);
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.9rem;
+  }
+  .feature-card h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.35rem;
+  }
+  .feature-card p {
+    color: var(--muted);
+    font-size: 0.88rem;
+  }
+
+  /* ===== СКОРО ===== */
+  .roadmap-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+  }
+  .roadmap-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 1rem;
+    border: 1px dashed var(--divider);
+    border-radius: 0.65rem;
+  }
+  .roadmap-item .ico {
+    color: var(--muted);
+    flex-shrink: 0;
+    margin-top: 0.1rem;
+  }
+  .roadmap-item h4 {
+    font-size: 0.92rem;
+    font-weight: 600;
+    margin-bottom: 0.2rem;
+  }
+  .roadmap-item p {
+    color: var(--muted);
+    font-size: 0.82rem;
+  }
+  .soon-tag {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: var(--accent-glow);
+    padding: 0.15rem 0.5rem;
+    border-radius: 9999px;
+    margin-left: 0.5rem;
+    vertical-align: middle;
+  }
+
+  /* ===== ГАЛЕРЕЯ ===== */
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.1rem;
+  }
+  .gallery-item {
+    border-radius: 0.7rem;
+    overflow: hidden;
+    border: 1px solid var(--divider);
+    background: var(--surface);
+    cursor: zoom-in;
+  }
+  .gallery-item img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    aspect-ratio: 16/10;
+    transition: transform 0.35s ease;
+  }
+  .gallery-item:hover img { transform: scale(1.04); }
+  .gallery-cap {
+    padding: 0.6rem 0.85rem;
+    font-size: 0.8rem;
+    color: var(--muted);
+    border-top: 1px solid var(--divider);
+  }
+
+  .lightbox {
+    position: fixed;
+    inset: 0;
+    background: rgba(5,6,8,0.9);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    padding: 2rem;
+  }
+  .lightbox.open { display: flex; }
+  .lightbox img {
+    max-width: 100%;
+    max-height: 100%;
+    border-radius: 0.6rem;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+  }
+
+  /* ===== FAQ ===== */
+  .faq-item {
+    border-bottom: 1px solid var(--divider);
+  }
+  .faq-item:first-child { border-top: 1px solid var(--divider); }
+  .faq-q {
+    width: 100%;
+    text-align: left;
+    background: none;
+    border: none;
+    color: var(--text);
+    font-family: inherit;
+    font-size: 0.98rem;
+    font-weight: 600;
+    padding: 1.1rem 0;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    flex-wrap: wrap;
+    gap: 1rem;
+    cursor: pointer;
+  }
+  .faq-q .chev {
+    color: var(--muted);
+    transition: transform 0.2s ease;
+    flex-shrink: 0;
+  }
+  .faq-item.open .faq-q .chev { transform: rotate(180deg); color: var(--accent); }
+  .faq-a {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.25s ease;
+  }
+  .faq-item.open .faq-a { max-height: 220px; }
+  .faq-a p {
+    color: var(--muted);
+    font-size: 0.9rem;
+    padding-bottom: 1.1rem;
+    max-width: 68ch;
+  }
+
+  /* ===== РЕЛИЗЫ / НОВОСТИ ===== */
+  .releases-layout {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: 2.5rem;
+  }
+  @media (max-width: 800px) {
+    .releases-layout { grid-template-columns: 1fr; }
+  }
+  h3.sub-head {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.05rem;
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     gap: 0.5rem;
   }
-  .news-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 1.25rem;
+  h3.sub-head a {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 400;
   }
-  .card {
+  .release-list { display: flex; flex-direction: column; gap: 0.6rem; }
+  .release-row {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    padding: 0.65rem 0.85rem;
+    background: var(--surface);
+    border: 1px solid var(--divider);
+    border-radius: 0.5rem;
+    text-decoration: none;
+    color: inherit;
+    font-size: 0.85rem;
+    transition: border-color 0.2s ease;
+  }
+  .release-row:hover { border-color: var(--accent); }
+  .release-row .tag {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--accent);
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+  .release-row .rname { color: var(--text); flex: 1; }
+  .release-row .rdate { color: var(--muted); font-size: 0.75rem; flex-shrink: 0; }
+
+  .news-grid { display: flex; flex-direction: column; gap: 1rem; }
+  .news-card {
     background: var(--surface);
     border: 1px solid var(--divider);
     border-radius: 0.6rem;
     overflow: hidden;
-    text-decoration: none;
-    color: inherit;
     display: flex;
     flex-direction: column;
-    transition: all 0.25s ease;
   }
-  .card:hover {
-    border-color: var(--accent);
-    transform: translateY(-4px);
-    box-shadow: 0 12px 40px rgba(0,0,0,0.3);
-  }
-  .card img {
+  .news-card img {
     width: 100%;
     aspect-ratio: 16/9;
     object-fit: cover;
     background: var(--surface-2);
   }
-  .card .body {
-    padding: 1rem 1.1rem 1.25rem;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-  }
-  .card .date {
+  .news-card .body { padding: 0.9rem 1rem 1.05rem; }
+  .news-card .date {
     font-family: 'JetBrains Mono', monospace;
     font-size: 0.7rem;
     color: var(--accent);
     letter-spacing: 0.04em;
   }
-  .card h3 {
-    margin: 0.4rem 0 0.4rem;
-    font-size: 1.05rem;
-    font-weight: 600;
-  }
-  .card p {
-    margin: 0;
-    color: var(--muted);
-    font-size: 0.9rem;
-    flex: 1;
-  }
-  .news-empty {
+  .news-card h4 { margin: 0.35rem 0 0.3rem; font-size: 0.95rem; }
+  .news-card p { margin: 0; color: var(--muted); font-size: 0.85rem; }
+  .list-empty {
     color: var(--muted);
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.85rem;
-    text-align: center;
-    padding: 2rem 0;
+    font-size: 0.82rem;
+    padding: 1rem 0;
   }
 
   /* ===== FOOTER ===== */
-  footer {
-    border-top: 1px solid var(--divider);
-    padding: 2rem 0;
-    color: var(--muted);
-    font-size: 0.85rem;
+  footer { padding: 2.5rem 0; }
+  footer .wrap {
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
-    gap: 0.5rem;
+    gap: 1.5rem;
+  }
+  footer .foot-col { display: flex; flex-direction: column; gap: 0.5rem; }
+  footer .foot-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.3rem;
   }
   footer a {
-    color: var(--accent);
+    color: var(--muted);
     text-decoration: none;
+    font-size: 0.88rem;
   }
-  footer a:hover {
-    text-decoration: underline;
+  footer a:hover { color: var(--accent); }
+  footer .foot-note {
+    color: var(--muted);
+    font-size: 0.8rem;
+    max-width: 32ch;
   }
-
-  /* ===== АНИМАЦИИ ===== */
-  @keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(30px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  .hero, .news { animation: fadeInUp 0.8s ease-out; }
 
   @media (max-width: 640px) {
     header.hero { padding: 3rem 0 2.5rem; }
     .downloads { flex-direction: column; align-items: stretch; }
     .btn { justify-content: center; }
     .version-badge { gap: 0.5rem; }
+    section { padding: 3rem 0; }
+  }
+
+  /* ===== ВАРИАНТ A: BOOT-ЗАСТАВКА ===== */
+  .boot-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 999;
+    background: #05060a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    overflow-y: auto;
+    scrollbar-width: none;
+    transition: opacity 0.5s ease;
+  }
+  .boot-overlay::-webkit-scrollbar { display: none; }
+  .boot-overlay.hidden {
+    opacity: 0;
+    pointer-events: none;
+  }
+  .boot-log {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    color: #8ef0a4;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    max-width: 560px;
+    width: 100%;
+    line-height: 1.7;
+  }
+  @media (max-width: 640px) {
+    .boot-log { font-size: 0.7rem; }
+  }
+
+  /* ===== СТАТУС-БАР ===== */
+  .statusbar {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 40;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 0 14px;
+    background: rgba(5, 6, 10, 0.92);
+    border-top: 1px solid var(--surface-3);
+    backdrop-filter: blur(4px);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--muted);
+    pointer-events: none;
+    font-variant-numeric: tabular-nums;
+  }
+  .statusbar span:first-child { color: var(--good); }
+  .statusbar #sb-path { flex: 1; text-align: center; color: var(--accent-dim); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  @media (max-width: 640px) {
+    .statusbar { display: none; }
+  }
+
+  /* ===== MAN-СТРАНИЦА (пасхалка) ===== */
+  .man-page {
+    position: fixed;
+    inset: 0;
+    z-index: 998;
+    background: #05060a;
+    color: #e8e6e1;
+    font-family: 'JetBrains Mono', monospace;
+    display: none;
+    flex-direction: column;
+  }
+  .man-page.open { display: flex; }
+  .man-topbar {
+    padding: 0.6rem 1rem;
+    text-align: center;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+    color: var(--muted);
+    border-bottom: 1px solid var(--surface-3);
+    flex-shrink: 0;
+  }
+  .man-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1.5rem 1.5rem 3rem;
+    max-width: 720px;
+    margin: 0 auto;
+    width: 100%;
+  }
+  .man-h {
+    font-weight: 700;
+    color: #fff;
+    margin: 1.4rem 0 0.4rem;
+    font-size: 0.85rem;
+  }
+  .man-h:first-child { margin-top: 0; }
+  .man-p {
+    margin: 0 0 0.3rem;
+    padding-left: 1.8rem;
+    font-size: 0.78rem;
+    line-height: 1.65;
+    color: #cfcdc7;
+  }
+  .man-status {
+    flex-shrink: 0;
+    padding: 0.35rem 1rem;
+    background: #e8e6e1;
+    color: #05060a;
+    font-size: 0.7rem;
+  }
+  .man-close {
+    position: absolute;
+    top: 0.6rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-size: 1rem;
+    cursor: pointer;
+    line-height: 1;
+  }
+  .man-close:hover { color: var(--text); }
+  #man-trigger {
+    cursor: help;
+    padding: 0 3px;
+    margin: 0 -3px;
+    border-radius: 2px;
+  }
+  #man-trigger:hover { background: var(--surface-3); }
+
+  /* ===== КОНСОЛЬНЫЙ РЕЖИМ ===== */
+  .console-toggle {
+    background: none;
+    border: 1px solid var(--surface-3);
+    color: var(--muted);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    line-height: 1;
+    padding: 0.4rem 0.55rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: color 0.15s ease, border-color 0.15s ease;
+  }
+  .console-toggle:hover { color: var(--text); border-color: var(--accent-dim); }
+  html.console-mode .console-toggle { color: #6fff8f; border-color: #6fff8f; }
+
+  html.console-mode #page-content,
+  html.console-mode .lightbox,
+  html.console-mode .statusbar,
+  html.console-mode .man-page {
+    filter: grayscale(1) brightness(1.05) contrast(1.15) sepia(1) hue-rotate(76deg) saturate(6);
+  }
+  html.console-mode #page-content,
+  html.console-mode #page-content * {
+    font-family: 'JetBrains Mono', monospace !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    text-shadow: 0 0 3px currentColor;
+  }
+  html.console-mode #page-content img,
+  html.console-mode #page-content canvas {
+    text-shadow: none;
+  }
+
+  /* Живой фон с точками/линиями — не консольный элемент, убираем совсем */
+  html.console-mode #bg-canvas { display: none !important; }
+
+  /* Навигация превращается в титлбар окна, как у моков ниже по странице */
+  .console-dots { display: none; gap: 6px; margin-right: 0.7rem; flex-shrink: 0; }
+  .console-dots span { width: 10px; height: 10px; border-radius: 50%; }
+  .console-dots .r { background: #ff5f57; }
+  .console-dots .y { background: #febc2e; }
+  .console-dots .g { background: #28c840; }
+  html.console-mode .console-dots { display: inline-flex; }
+  html.console-mode nav.topnav {
+    position: static !important;
+    background: #0a0d0a !important;
+    backdrop-filter: none !important;
+  }
+
+  /* Окно-мокап лаунчера и превью в галерее — без 3D-наклона и теней */
+  html.console-mode .app-window { transform: none !important; border: 1px solid currentColor !important; }
+  html.console-mode .app-window:hover { transform: none !important; }
+
+  /* Картинки заменяются "консольным" ASCII/пиксель-артом (см. секцию 13 JS) */
+  html.console-mode .app-window img,
+  html.console-mode .gallery-item img {
+    display: none !important;
+  }
+  .consolify-canvas { display: none; width: 100%; height: auto; }
+  .gallery-item .consolify-canvas { height: 100%; object-fit: cover; aspect-ratio: 16/10; }
+  html.console-mode .consolify-canvas { display: block !important; }
+
+  /* Кнопки — квадратные скобки вместо пилюль с градиентом */
+  html.console-mode .btn {
+    background: transparent !important;
+    border: 1px solid currentColor !important;
+    color: inherit !important;
+    font-weight: 400 !important;
+  }
+  html.console-mode .btn::before { content: '[ '; }
+  html.console-mode .btn::after { content: ' ]'; }
+  html.console-mode .btn:hover {
+    background: currentColor !important;
+    color: #000 !important;
+    transform: none !important;
+  }
+
+  /* Карточки фич/roadmap — плоский список вместо грид-карточек с иконками */
+  html.console-mode .feature-grid,
+  html.console-mode .roadmap-list {
+    display: block !important;
+  }
+  html.console-mode .feature-card,
+  html.console-mode .roadmap-item {
+    display: block !important;
+    padding: 0.55rem 0 !important;
+    margin: 0 !important;
+    border: none !important;
+    border-bottom: 1px dotted currentColor !important;
+    background: none !important;
+  }
+  html.console-mode .feature-card .ico,
+  html.console-mode .roadmap-item .ico {
+    display: none !important;
+  }
+  html.console-mode .feature-card h3::before { content: '> '; }
+  html.console-mode .roadmap-item h4::before { content: '* '; }
+
+  /* FAQ — квадратные [+]/[-] вместо svg-шеврона */
+  html.console-mode .faq-q .chev { display: none !important; }
+  html.console-mode .faq-q::after { content: '[+]'; flex-shrink: 0; }
+  html.console-mode .faq-item.open .faq-q::after { content: '[-]'; }
+
+  /* Галерея — подпись в виде команды, а не просто текст */
+  html.console-mode .gallery-cap::before { content: '$ open '; opacity: 0.6; }
+  .console-scanlines {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0.15) 0px,
+      rgba(0, 0, 0, 0.15) 1px,
+      transparent 1px,
+      transparent 3px
+    );
+    mix-blend-mode: multiply;
+  }
+  html.console-mode .console-scanlines { display: block; }
+  @media (prefers-reduced-motion: no-preference) {
+    html.console-mode .console-scanlines { animation: scan-flicker 6s steps(2) infinite; }
+  }
+  @keyframes scan-flicker {
+    0%, 96%, 100% { opacity: 1; }
+    97% { opacity: 0.85; }
+    98% { opacity: 1; }
+  }
+  .boot-log .ok { color: #8ef0a4; }
+  .boot-log .prompt { color: var(--accent); }
+  .boot-log .dim { color: var(--muted); }
+  .boot-log .warn { color: #febc2e; }
+  .boot-skip {
+    position: absolute;
+    bottom: 1.5rem;
+    right: 1.75rem;
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    cursor: pointer;
+    opacity: 0.6;
+    transition: opacity 0.2s ease;
+  }
+  .boot-skip:hover { opacity: 1; color: var(--text); }
+  .boot-cursor {
+    display: inline-block;
+    width: 8px;
+    height: 1em;
+    background: #8ef0a4;
+    vertical-align: text-bottom;
+    animation: blink 1s steps(1) infinite;
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  /* ===== ВАРИАНТ A: NEOFETCH-ПАНЕЛЬ ===== */
+  .neofetch {
+    display: flex;
+    gap: 1.25rem;
+    align-items: center;
+    background: var(--surface);
+    border: 1px solid var(--divider);
+    border-radius: 0.6rem;
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.5rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+  }
+  .neofetch pre.cube {
+    color: var(--accent);
+    line-height: 1.15;
+    flex-shrink: 0;
+  }
+  .neofetch dl {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.15rem 0.9rem;
+    margin: 0;
+  }
+  .neofetch dt { color: var(--accent); font-weight: 600; }
+  .neofetch dd { margin: 0; color: var(--text); }
+  .neofetch .whoami { color: var(--muted); grid-column: 1 / -1; margin-bottom: 0.3rem; padding-bottom: 0.3rem; border-bottom: 1px solid var(--divider); }
+  @media (max-width: 480px) {
+    .neofetch { flex-direction: column; align-items: flex-start; }
   }
 </style>
 </head>
@@ -265,53 +892,328 @@
 <!-- ===== ЖИВОЙ ФОН ===== -->
 <canvas id="bg-canvas"></canvas>
 
-<header class="hero">
+<!-- ===== ВАРИАНТ A: BOOT-ЗАСТАВКА ===== -->
+<div class="boot-overlay" id="boot-overlay">
+  <pre class="boot-log" id="boot-log"></pre>
+  <button class="boot-skip" id="boot-skip">нажми, чтобы пропустить →</button>
+</div>
+
+<div id="page-content">
+
+<nav class="topnav">
   <div class="wrap">
-    <p class="eyebrow">✦ By Alex | Gussiak</p>
-    <h1>ModLEX</h1>
-    <p class="lede">Форк Modrinth App с дополнительными возможностями и интеграциями</p>
-
-    <div class="version-badge" id="version-badge">
-      <span class="badge">GVC: <span class="highlight" id="gvc-version">—</span></span>
-      <span class="badge">База Modrinth: <span class="highlight" id="modrinth-version">—</span></span>
-      <span class="badge" id="update-status">● Загрузка...</span>
-    </div>
-
-    <div class="downloads">
-      <a class="btn primary" id="download-btn" href="https://github.com/GUSSIak/ModeLEX">
-        ⬇ Скачать <span class="version-tag" id="download-version">v—</span>
+    <span class="console-dots" aria-hidden="true"><span class="r"></span><span class="y"></span><span class="g"></span></span>
+    <a class="brand" href="#top">ModLEX</a>
+    <ul class="navlinks">
+      <li><a href="#features">Возможности</a></li>
+      <li><a href="#screenshots">Скриншоты</a></li>
+      <li><a href="#faq">FAQ</a></li>
+      <li><a href="#releases">Релизы</a></li>
+    </ul>
+    <div class="nav-icons">
+      <a class="icon-btn" href="https://discord.gg/CGAPjG9xJa" target="_blank" rel="noopener" aria-label="Discord" title="Discord">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.3 4.4A19.7 19.7 0 0 0 15.4 3l-.3.5c1.8.5 2.9 1.1 4 2 -1.7-.8-3.4-1.2-5-1.4-1-.1-2-.1-3 0-1.6.2-3.3.6-5 1.4 1.1-.9 2.4-1.6 4-2L10 3a19.6 19.6 0 0 0-4.9 1.4C2.5 8.2 1.7 11.9 2 15.6c1.8 1.3 3.6 2.1 5.3 2.6l.7-1.2c-.7-.3-1.5-.6-2.1-1l.2-.2c3.9 1.8 8 1.8 11.8 0l.2.2c-.7.4-1.4.7-2.1 1l.7 1.2c1.7-.5 3.5-1.3 5.3-2.6.4-4.3-.8-8-2.7-11.2ZM9.2 13.7c-.9 0-1.6-.8-1.6-1.8s.7-1.8 1.6-1.8 1.7.8 1.6 1.8c0 1-.7 1.8-1.6 1.8Zm5.6 0c-.9 0-1.6-.8-1.6-1.8s.7-1.8 1.6-1.8 1.7.8 1.6 1.8c0 1-.7 1.8-1.6 1.8Z"/></svg>
       </a>
-      <a class="btn" href="https://github.com/GUSSIak/ModeLEX">
+      <a class="icon-btn" href="https://github.com/GUSSIak/ModeLEX" target="_blank" rel="noopener" aria-label="GitHub" title="Исходный код">
         <svg width="18" height="18" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
-        Исходный код
       </a>
-      <a class="btn" href="https://github.com/GUSSIak/ModeLEX/releases">
-        📦 Релизы
-      </a>
+      <button class="console-toggle" id="console-toggle" type="button" title="Консольный режим">&gt;_</button>
+    </div>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="wrap">
+    <div class="hero-grid">
+      <div>
+        <p class="eyebrow">✦ By Alex | Gussiak</p>
+        <h1>ModLEX</h1>
+        <p class="lede">Форк Modrinth App с глубокой кастомизацией и своими интеграциями — открытый исходный код, бесплатно и без рекламы.</p>
+
+        <div class="neofetch">
+          <pre class="cube">  ▄▄▄▄▄▄▄
+ █ ▄▄▄▄▄ █
+ █ █▀▀▀█ █
+ █ █▄▄▄█ █
+ █▄▄▄▄▄▄▄█</pre>
+          <dl>
+            <dt class="whoami" style="grid-column:1/-1;border:none;padding:0;margin:0;">guest@modlex</dt>
+            <dt>Версия</dt><dd><span id="gvc-version">—</span></dd>
+            <dt>Modrinth</dt><dd><span id="modrinth-version">—</span></dd>
+            <dt>Статус</dt><dd id="update-status">Загрузка...</dd>
+            <dt>ОС</dt><dd>Windows</dd>
+            <dt class="whoami" id="neofetch-swatches" style="grid-column:1/-1;border:none;padding:0.4rem 0 0;margin:0;display:flex;gap:4px;">
+              <span data-color="var(--surface-2)" style="width:14px;height:14px;border-radius:3px;"></span>
+              <span data-color="var(--surface-3)" style="width:14px;height:14px;border-radius:3px;"></span>
+              <span data-color="var(--accent-dim)" style="width:14px;height:14px;border-radius:3px;"></span>
+              <span data-color="var(--accent)" style="width:14px;height:14px;border-radius:3px;"></span>
+              <span data-color="#c084fc" style="width:14px;height:14px;border-radius:3px;"></span>
+              <span data-color="#e9d5ff" style="width:14px;height:14px;border-radius:3px;"></span>
+              <span data-color="var(--good)" style="width:14px;height:14px;border-radius:3px;"></span>
+              <span data-color="var(--muted)" style="width:14px;height:14px;border-radius:3px;"></span>
+            </dt>
+          </dl>
+        </div>
+
+        <div class="downloads">
+          <a class="btn primary" id="download-btn" href="https://github.com/GUSSIak/ModeLEX/releases">
+            ⬇ Скачать <span class="version-tag" id="download-version">v—</span>
+          </a>
+          <a class="btn discord" href="https://discord.gg/CGAPjG9xJa" target="_blank" rel="noopener">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20.3 4.4A19.7 19.7 0 0 0 15.4 3l-.3.5c1.8.5 2.9 1.1 4 2 -1.7-.8-3.4-1.2-5-1.4-1-.1-2-.1-3 0-1.6.2-3.3.6-5 1.4 1.1-.9 2.4-1.6 4-2L10 3a19.6 19.6 0 0 0-4.9 1.4C2.5 8.2 1.7 11.9 2 15.6c1.8 1.3 3.6 2.1 5.3 2.6l.7-1.2c-.7-.3-1.5-.6-2.1-1l.2-.2c3.9 1.8 8 1.8 11.8 0l.2.2c-.7.4-1.4.7-2.1 1l.7 1.2c1.7-.5 3.5-1.3 5.3-2.6.4-4.3-.8-8-2.7-11.2ZM9.2 13.7c-.9 0-1.6-.8-1.6-1.8s.7-1.8 1.6-1.8 1.7.8 1.6 1.8c0 1-.7 1.8-1.6 1.8Zm5.6 0c-.9 0-1.6-.8-1.6-1.8s.7-1.8 1.6-1.8 1.7.8 1.6 1.8c0 1-.7 1.8-1.6 1.8Z"/></svg>
+            Discord
+          </a>
+          <a class="btn" href="https://github.com/GUSSIak/ModeLEX">
+            <svg width="18" height="18" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+            Исходный код
+          </a>
+        </div>
+
+        <p class="free-note">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>
+          Полностью бесплатно, без рекламы и разовых или подписочных платежей
+        </p>
+      </div>
+
+      <div class="app-window" id="hero-window">
+        <div class="titlebar">
+          <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+          <div class="addr"></div>
+        </div>
+        <img src="assets/screenshots/library.webp" alt="Окно ModLEX: библиотека инстанций и переключение аккаунтов" loading="eager">
+      </div>
     </div>
   </div>
 </header>
 
-<section class="news">
+<section id="features">
   <div class="wrap">
-    <h2>
-      <span>📰 Новости</span>
-      <a href="https://github.com/GUSSIak/ModeLEX/releases" style="font-family:'JetBrains Mono',monospace;font-size:0.8rem;color:var(--accent);text-decoration:none;font-weight:400;">
-        Все релизы →
-      </a>
-    </h2>
-    <div id="news-grid" class="news-grid">
-      <p class="news-empty">⏳ Загрузка новостей...</p>
+    <div class="section-head">
+      <h2>В чём преимущество</h2>
+      <p>ModLEX сохраняет весь удобный функционал Modrinth App и добавляет то, чего в нём не хватало.</p>
+    </div>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="13.5" cy="6.5" r="0.5"/><circle cx="17.5" cy="10.5" r="0.5"/><circle cx="8.5" cy="7.5" r="0.5"/><circle cx="6.5" cy="12.5" r="0.5"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.9 0 1.5-.7 1.5-1.5 0-.4-.2-.8-.4-1.1-.2-.3-.4-.6-.4-1 0-.8.7-1.5 1.5-1.5H16c3.3 0 6-2.7 6-6 0-4.4-4-8-10-8Z"/></svg></div>
+        <h3>Глубокая кастомизация</h3>
+        <p>Свои цветовые схемы, фон, обводка текста и другие визуальные настройки — лаунчер подстраивается под вас, а не только под тему разработчика.</p>
+      </div>
+      <div class="feature-card">
+        <div class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="14" rx="3"/><path d="M7 9h.01M12 9h.01M17 9h.01M7 13h6"/></svg></div>
+        <h3>Свой Discord Rich Presence</h3>
+        <p>Настраиваемый статус в Discord — текст, отображаемые данные и поведение при простое можно менять под себя.</p>
+      </div>
+      <div class="feature-card">
+        <div class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3 4 6v6c0 4.4 3.4 7.8 8 9 4.6-1.2 8-4.6 8-9V6l-8-3Z"/></svg></div>
+        <h3>Без телеметрии</h3>
+        <p>Сбор аналитики и отслеживание использования полностью вырезаны из форка. Лаунчер не следит за тем, что вы делаете.</p>
+      </div>
+      <div class="feature-card">
+        <div class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M2 12h20"/></svg></div>
+        <h3>Открытая разработка</h3>
+        <p>Весь код открыт на GitHub, а лаунчер сейчас в открытой бете — можно следить за изменениями и предлагать свои.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="roadmap">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>В разработке</h2>
+      <p>Уже работает, но ещё дорабатывается — стоит знать, что впереди.</p>
+    </div>
+    <div class="roadmap-list">
+      <div class="roadmap-item">
+        <div class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 2 7l10 5 10-5-10-5ZM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div>
+        <div>
+          <h4>Поддержка CurseForge<span class="soon-tag">Скоро</span></h4>
+          <p>Установка модов и модпаков не только с Modrinth.</p>
+        </div>
+      </div>
+      <div class="roadmap-item">
+        <div class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v3M12 18v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M3 12h3M18 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/><circle cx="12" cy="12" r="4"/></svg></div>
+        <div>
+          <h4>ИИ-агент<span class="soon-tag">Скоро</span></h4>
+          <p>Помощник внутри лаунчера для диагностики крашей и подбора модов.</p>
+        </div>
+      </div>
+      <div class="roadmap-item">
+        <div class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+        <div>
+          <h4>Параллельный запуск с разных аккаунтов<span class="soon-tag">Скоро</span></h4>
+          <p>Одновременная игра сразу с нескольких аккаунтов на одной инстанции.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="screenshots">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Скриншоты</h2>
+      <p>Как выглядит ModLEX в деле.</p>
+    </div>
+    <div class="gallery-grid" id="gallery-grid">
+      <div class="gallery-item" data-full="assets/screenshots/library.webp">
+        <img src="assets/screenshots/library.webp" alt="Библиотека инстанций и панель аккаунтов" loading="lazy">
+        <div class="gallery-cap">Библиотека и мультиаккаунт</div>
+      </div>
+      <div class="gallery-item" data-full="assets/screenshots/customization.webp">
+        <img src="assets/screenshots/customization.webp" alt="Разные цветовые темы лаунчера" loading="lazy">
+        <div class="gallery-cap">Кастомизация цветовых тем</div>
+      </div>
+      <div class="gallery-item" data-full="assets/screenshots/skins.webp">
+        <img src="assets/screenshots/skins.webp" alt="Выбор скина с интеграцией Ely.by" loading="lazy">
+        <div class="gallery-cap">Скины и интеграция с Ely.by</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="faq">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Частые вопросы</h2>
+    </div>
+    <div id="faq-list">
+      <div class="faq-item">
+        <button class="faq-q">Безопасно ли это? <svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></button>
+        <div class="faq-a"><p>Да — весь код открыт на GitHub, любой может его проверить. ModLEX не собирает телеметрию и не запрашивает ничего, кроме обычного входа в аккаунт Minecraft/Ely.by, как и оригинальный Modrinth App.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">Чем ModLEX отличается от Modrinth App? <svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></button>
+        <div class="faq-a"><p>Это форк с той же основой, но с добавленной глубокой кастомизацией внешнего вида, своим Discord Rich Presence и полностью убранной телеметрией. Со временем добавляются и более крупные вещи — см. раздел «В разработке».</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">Нужен ли отдельный аккаунт для ModLEX? <svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></button>
+        <div class="faq-a"><p>Нет. Используется тот же вход, что и обычно — лицензионный аккаунт Microsoft/Minecraft либо Ely.by. ModLEX ничего не хранит от себя.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">На каких платформах это работает? <svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></button>
+        <div class="faq-a"><p>Сейчас доступна только сборка под Windows. Другие платформы не исключены в будущем, но пока не в приоритете.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">Проект ещё в разработке? <svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></button>
+        <div class="faq-a"><p>Да, лаунчер сейчас в открытой бете — основной функционал стабилен, но встречаются шероховатости. Баги и пожелания можно присылать на Discord или через Issues на GitHub.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="releases">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Релизы и новости</h2>
+    </div>
+    <div class="releases-layout">
+      <div>
+        <h3 class="sub-head">
+          <span>Все версии</span>
+          <a href="https://github.com/GUSSIak/ModeLEX/releases" target="_blank" rel="noopener">Все релизы →</a>
+        </h3>
+        <div class="release-list" id="release-list">
+          <p class="list-empty">⏳ Загрузка релизов...</p>
+        </div>
+      </div>
+      <div>
+        <h3 class="sub-head"><span>Новости</span></h3>
+        <div class="news-grid" id="news-grid">
+          <p class="list-empty">⏳ Загрузка новостей...</p>
+        </div>
+      </div>
     </div>
   </div>
 </section>
 
 <footer>
-  <div class="wrap" style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:0.5rem;">
-    <span>ModLEX — основан на открытом коде <a href="https://modrinth.com/app" target="_blank">Modrinth App</a>.</span>
-    <span>Сделано с уважением для Minecraft-сообщества</span>
+  <div class="wrap">
+    <div class="foot-col">
+      <span class="foot-title">ModLEX</span>
+      <a href="https://github.com/GUSSIak/ModeLEX" target="_blank" rel="noopener">Исходный код</a>
+      <a href="https://github.com/GUSSIak/ModeLEX/releases" target="_blank" rel="noopener">Релизы</a>
+      <a href="https://github.com/GUSSIak/ModeLEX/issues" target="_blank" rel="noopener">Сообщить об ошибке</a>
+    </div>
+    <div class="foot-col">
+      <span class="foot-title">Сообщество</span>
+      <a href="https://discord.gg/CGAPjG9xJa" target="_blank" rel="noopener">Discord</a>
+    </div>
+    <div class="foot-col">
+      <span class="foot-title">О проекте</span>
+      <p class="foot-note">ModLEX — основан на открытом коде <a href="https://modrinth.com/app" target="_blank" style="display:inline">Modrinth App</a>. Сделано с уважением для Minecraft-сообщества<span id="man-trigger">.</span></p>
+    </div>
   </div>
 </footer>
+
+</div>
+
+<div class="lightbox" id="lightbox">
+  <img id="lightbox-img" src="" alt="">
+</div>
+
+<div class="statusbar" id="statusbar" aria-hidden="true">
+  <span id="sb-clock">--:--:--</span>
+  <span id="sb-path">~/</span>
+  <span id="sb-uptime">up 0 min, load average: 0.00, 0.00, 0.00</span>
+</div>
+
+<div class="man-page" id="man-page">
+  <div class="man-topbar">MODLEX(1)&nbsp;&nbsp;&nbsp;&nbsp;General Commands Manual&nbsp;&nbsp;&nbsp;&nbsp;MODLEX(1)</div>
+  <div class="man-body" id="man-body">
+    <p class="man-h">NAME</p>
+    <p class="man-p">modlex — форк Modrinth App с открытым исходным кодом, без рекламы и телеметрии</p>
+
+    <p class="man-h">SYNOPSIS</p>
+    <p class="man-p"><b>modlex</b> [--offline] [--ely-by] [--curseforge <i>(скоро)</i>]</p>
+
+    <p class="man-h">VERSION</p>
+    <p class="man-p">Текущий релиз: <b>v<span id="man-version">—</span></b>, база Modrinth <span id="man-modrinth-base">—</span>. Статус: открытая бета.</p>
+
+    <p class="man-h">DESCRIPTION</p>
+    <p class="man-p">ModLEX сохраняет весь удобный функционал Modrinth App и добавляет то, чего в нём не хватало. Проект полностью открыт, бесплатен и не монетизируется рекламой — ни встроенной рекламы, ни разовых или подписочных платежей.</p>
+
+    <p class="man-h">FEATURES</p>
+    <p class="man-p">-c, --customization&nbsp;&nbsp;&nbsp;Свои цветовые схемы, фон, обводка текста и другие визуальные настройки — лаунчер подстраивается под вас.</p>
+    <p class="man-p">-d, --discord-rpc&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Настраиваемый Discord Rich Presence — текст, данные и поведение при простое.</p>
+    <p class="man-p">-t, --no-telemetry&nbsp;&nbsp;&nbsp;&nbsp;Сбор аналитики полностью вырезан из форка.</p>
+    <p class="man-p">-o, --open-source&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Весь код открыт на GitHub, разработка ведётся публично.</p>
+
+    <p class="man-h">ROADMAP</p>
+    <p class="man-p">curseforge&nbsp;&nbsp;&nbsp;&nbsp;(скоро) Установка модов и модпаков не только с Modrinth.</p>
+    <p class="man-p">ai-agent&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(скоро) Помощник внутри лаунчера для диагностики крашей и подбора модов.</p>
+    <p class="man-p">multi-account (скоро) Одновременная игра сразу с нескольких аккаунтов на одной инстанции.</p>
+
+    <p class="man-h">SCREENSHOTS</p>
+    <p class="man-p">Библиотека и мультиаккаунт, кастомизация цветовых тем, скины и интеграция с Ely.by — см. раздел «Скриншоты» на обычной версии страницы.</p>
+
+    <p class="man-h">DOWNLOAD</p>
+    <p class="man-p">$ curl -LO https://github.com/GUSSIak/ModeLEX/releases/latest<br>Актуальная сборка — только Windows. Ссылка «Скачать» в шапке сайта ведёт на тот же релиз.</p>
+
+    <p class="man-h">FAQ</p>
+    <p class="man-p"><b>Q:</b> Безопасно ли это?<br><b>A:</b> Да — весь код открыт на GitHub, любой может его проверить. Телеметрии нет, запрашивается только обычный вход в аккаунт Minecraft/Ely.by, как и в оригинальном Modrinth App.</p>
+    <p class="man-p"><b>Q:</b> Чем ModLEX отличается от Modrinth App?<br><b>A:</b> Та же основа, плюс глубокая кастомизация внешнего вида, свой Discord Rich Presence и полностью убранная телеметрия.</p>
+    <p class="man-p"><b>Q:</b> Нужен ли отдельный аккаунт для ModLEX?<br><b>A:</b> Нет. Используется тот же вход, что и обычно — лицензионный Microsoft/Minecraft либо Ely.by.</p>
+    <p class="man-p"><b>Q:</b> На каких платформах это работает?<br><b>A:</b> Сейчас доступна только сборка под Windows.</p>
+    <p class="man-p"><b>Q:</b> Проект ещё в разработке?<br><b>A:</b> Да, открытая бета — основной функционал стабилен, но встречаются шероховатости.</p>
+
+    <p class="man-h">FILES</p>
+    <p class="man-p">~/.modlex/config.json&nbsp;&nbsp;&nbsp;&nbsp;пользовательские настройки<br>~/.modlex/logs/*.log&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;логи запуска</p>
+
+    <p class="man-h">AUTHOR</p>
+    <p class="man-p">Написано Alex (Gussiak).</p>
+
+    <p class="man-h">SEE ALSO</p>
+    <p class="man-p">discord(1), github(1), minecraft(6)</p>
+
+    <p class="man-h">BUGS</p>
+    <p class="man-p">Присылайте на GitHub Issues или в Discord — см. футер страницы.</p>
+  </div>
+  <div class="man-status">Manual page modlex(1) — нажми q, Esc или ✕, чтобы выйти</div>
+  <button class="man-close" id="man-close" aria-label="Закрыть man-страницу">✕</button>
+</div>
+
+<div class="console-scanlines" aria-hidden="true"></div>
 
 <script>
 // ============================================================
@@ -390,7 +1292,6 @@
   }
   animate();
 
-  // Пересоздаём точки при ресайзе
   window.addEventListener('resize', () => {
     resize();
     dots.length = 0;
@@ -410,26 +1311,42 @@ async function loadData() {
     if (!resp.ok) throw new Error('Network error');
     const data = await resp.json();
 
-    // GVC версия
     const gvcEl = document.getElementById('gvc-version');
     const modrinthEl = document.getElementById('modrinth-version');
     const statusEl = document.getElementById('update-status');
     const downloadVersionEl = document.getElementById('download-version');
 
+    // Значения приходят асинхронно — обфусцировать их ДО того, как настоящее
+    // значение известно, нельзя (тогда "оригиналом" запомнится "—"). Поэтому
+    // расшифровка-вспышка запускается ЗДЕСЬ же, сразу после получения
+    // настоящих данных, а не через общий IntersectionObserver ниже.
+    function revealValue(el, text) {
+      el.textContent = text;
+      if (window.__modlexScramble) {
+        window.__modlexScramble.obfuscateEl(el);
+        window.__modlexScramble.whenBootDone(() => {
+          setTimeout(() => window.__modlexScramble.decryptEl(el), 200 + Math.random() * 300);
+        });
+      }
+    }
+
     const gvcVersion = data.version || '—';
-    gvcEl.textContent = gvcVersion;
+    revealValue(gvcEl, gvcVersion);
 
-    // Версия Modrinth — поле modrinth_base_version
-    const modrinthBase = data.modrinth_base_version || '—';
-    modrinthEl.textContent = modrinthBase;
+    // Поле в updates.json называется modrinth_base, а не modrinth_base_version.
+    const modrinthBase = data.modrinth_base || '—';
+    revealValue(modrinthEl, modrinthBase);
 
-    statusEl.innerHTML = `● Актуальная версия: <span style="color:var(--accent);">${gvcVersion}</span>`;
+    revealValue(statusEl, 'Открытая бета');
 
     if (downloadVersionEl) {
       downloadVersionEl.textContent = `v${gvcVersion}`;
     }
+    const manVersionEl = document.getElementById('man-version');
+    if (manVersionEl) manVersionEl.textContent = gvcVersion;
+    const manModrinthEl = document.getElementById('man-modrinth-base');
+    if (manModrinthEl) manModrinthEl.textContent = modrinthBase;
 
-    // Ссылка на скачивание
     const downloadBtn = document.getElementById('download-btn');
     if (data.platforms && data.platforms['windows-x86_64']) {
       const url = data.platforms['windows-x86_64'].url;
@@ -437,18 +1354,14 @@ async function loadData() {
         downloadBtn.href = url;
       }
     }
-
-    await loadNews();
-
   } catch (err) {
-    console.warn('Failed to load updates-beta.json:', err);
+    console.warn('Failed to load updates.json:', err);
     document.getElementById('update-status').textContent = '⚠ Не удалось загрузить версию';
-    await loadNews();
   }
 }
 
 // ============================================================
-// 3. ЗАГРУЗКА НОВОСТЕЙ
+// 3. ЗАГРУЗКА НОВОСТЕЙ (ручные, из news.json)
 // ============================================================
 async function loadNews() {
   const grid = document.getElementById('news-grid');
@@ -459,27 +1372,706 @@ async function loadNews() {
     const items = data.items || [];
 
     if (items.length === 0) {
-      grid.innerHTML = '<p class="news-empty">📭 Пока нет новостей.</p>';
+      grid.innerHTML = '<p class="list-empty">📭 Пока нет новостей.</p>';
       return;
     }
 
-    grid.innerHTML = items.map((item) => `
-      <a class="card" href="${item.url || '#'}" target="_blank" rel="noopener">
+    // Карточка кликабельна, только если для неё указан осмысленный внешний
+    // url (не просто ссылка на этот же сайт) — иначе клик никуда не ведёт
+    // и только сбивает с толку.
+    grid.innerHTML = items.map((item) => {
+      const hasRealLink = item.url && !item.url.replace(/\/$/, '').endsWith('gussiak.github.io');
+      const Tag = hasRealLink ? 'a' : 'div';
+      const linkAttrs = hasRealLink ? `href="${item.url}" target="_blank" rel="noopener"` : '';
+      return `
+      <${Tag} class="news-card" ${linkAttrs} style="text-decoration:none;color:inherit;">
         ${item.image ? `<img src="${item.image}" alt="${item.title}" loading="lazy">` : ''}
         <div class="body">
           <span class="date">${item.date || ''}</span>
-          <h3>${item.title}</h3>
+          <h4>${item.title}</h4>
           <p>${item.summary || ''}</p>
         </div>
-      </a>
-    `).join('');
+      </${Tag}>
+    `;
+    }).join('');
   } catch (err) {
     console.warn('Failed to load news.json:', err);
-    grid.innerHTML = '<p class="news-empty">❌ Не удалось загрузить новости.</p>';
+    grid.innerHTML = '<p class="list-empty">❌ Не удалось загрузить новости.</p>';
   }
 }
 
+// ============================================================
+// 4. РЕЛИЗЫ — ЖИВЬЁМ С GITHUB, БЕЗ РУЧНОГО ВЕДЕНИЯ
+// ============================================================
+async function loadReleases() {
+  const list = document.getElementById('release-list');
+  try {
+    const resp = await fetch('https://api.github.com/repos/GUSSIak/ModeLEX/releases?per_page=8');
+    if (!resp.ok) throw new Error('Network error');
+    const releases = await resp.json();
+
+    if (!Array.isArray(releases) || releases.length === 0) {
+      list.innerHTML = '<p class="list-empty">📭 Релизов пока нет.</p>';
+      return;
+    }
+
+    // GitHub отдаёт релизы в порядке публикации, а не по номеру версии —
+    // если релиз опубликован не по порядку (реально наблюдалось: beta.10
+    // после beta.7/8/9), список выглядит перепутанным и на самом GitHub
+    // тоже. Пересортировываем по числам из тега, а не по дате.
+    function versionKey(tag) {
+      return (tag.match(/\d+/g) || []).map(Number);
+    }
+    releases.sort((a, b) => {
+      const ka = versionKey(a.tag_name);
+      const kb = versionKey(b.tag_name);
+      const len = Math.max(ka.length, kb.length);
+      for (let i = 0; i < len; i++) {
+        const diff = (kb[i] ?? 0) - (ka[i] ?? 0);
+        if (diff !== 0) return diff;
+      }
+      return 0;
+    });
+
+    list.innerHTML = releases.map((r) => {
+      const date = r.published_at ? new Date(r.published_at).toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric' }) : '';
+      const name = r.name && r.name !== r.tag_name ? r.name : 'Релиз';
+      return `
+      <a class="release-row" href="${r.html_url}" target="_blank" rel="noopener">
+        <span class="tag">${r.tag_name}</span>
+        <span class="rname">${name}</span>
+        <span class="rdate">${date}</span>
+      </a>
+    `;
+    }).join('');
+  } catch (err) {
+    console.warn('Failed to load GitHub releases:', err);
+    list.innerHTML = '<p class="list-empty">❌ Не удалось загрузить список релизов. <a href="https://github.com/GUSSIak/ModeLEX/releases" style="color:var(--accent);" target="_blank">Смотреть на GitHub →</a></p>';
+  }
+}
+
+// ============================================================
+// 5. FAQ — АККОРДЕОН
+// ============================================================
+document.querySelectorAll('.faq-item').forEach((item) => {
+  const answerP = item.querySelector('.faq-a p');
+  item.querySelector('.faq-q').addEventListener('click', () => {
+    const opening = !item.classList.contains('open');
+    item.classList.toggle('open');
+    // Ответ шифруется/расшифровывается заново при каждом открытии —
+    // не только один раз при первом попадании в область видимости.
+    if (!window.__modlexScramble || !answerP) return;
+    if (opening) window.__modlexScramble.decryptEl(answerP);
+    else window.__modlexScramble.obfuscateEl(answerP);
+  });
+});
+
+// ============================================================
+// 6. ГАЛЕРЕЯ — LIGHTBOX
+// ============================================================
+const lightbox = document.getElementById('lightbox');
+const lightboxImg = document.getElementById('lightbox-img');
+document.querySelectorAll('.gallery-item').forEach((el) => {
+  el.addEventListener('click', () => {
+    lightboxImg.src = el.dataset.full;
+    lightbox.classList.add('open');
+  });
+});
+lightbox.addEventListener('click', () => lightbox.classList.remove('open'));
+
 loadData();
+loadNews();
+loadReleases();
+
+// ============================================================
+// 7. ВАРИАНТ A: BOOT-ПОСЛЕДОВАТЕЛЬНОСТЬ (расширенная)
+// ============================================================
+(function bootSequence() {
+  const overlay = document.getElementById('boot-overlay');
+  const log = document.getElementById('boot-log');
+  const skipEl = document.getElementById('boot-skip');
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function scrollToBottom() {
+    overlay.scrollTop = overlay.scrollHeight;
+  }
+
+  function finish() {
+    overlay.classList.add('hidden');
+    setTimeout(() => overlay.remove(), 550);
+    // Сигнал для decryptEverything (ниже) — без него IntersectionObserver
+    // считает элементы "видимыми" ещё во время бута (оверлей перекрывает
+    // их визуально, но геометрически они уже в вьюпорте), и то, что видно
+    // сразу на входе (neofetch-панель), расшифровывалось раньше времени.
+    window.__modlexBootDone = true;
+    window.dispatchEvent(new Event('modlex:boot-done'));
+  }
+
+  if (reduceMotion) {
+    finish();
+    return;
+  }
+
+  skipEl.addEventListener('click', finish);
+
+  // Пул необязательных строк — каждый раз показываем случайный поднабор,
+  // чтобы при повторных заходах не выглядело одинаково "по скрипту".
+  // Идея: инсценированный "взлом" системы ModLEX и выгрузка сайта с
+  // удалённого сервера — не настоящий эксплойт, чисто атмосфера.
+  const pool = [
+    '  [*] Сканирование открытых портов...',
+    '  [*] Обход файрвола...',
+    '  [*] Подбор токена сессии...',
+    '  [*] Поиск точки входа в API...',
+    '  [*] Маскировка исходного адреса...',
+  ];
+  function pickRandom(arr, n) {
+    const copy = [...arr];
+    const out = [];
+    while (out.length < n && copy.length) {
+      out.push(copy.splice(Math.floor(Math.random() * copy.length), 1)[0]);
+    }
+    return out;
+  }
+
+  // Реальные данные вместо чисто декоративных строк — измеряем настоящий
+  // отклик GitHub API и берём настоящий тег последнего релиза лаунчера,
+  // подано как "полученные с сервера метаданные".
+  const pingPromise = (async () => {
+    const t0 = performance.now();
+    try {
+      // /releases/latest у GitHub игнорирует pre-release (а у нас все
+      // релизы такие, проект в бете) и всегда отдаёт 404 — берём обычный
+      // список и первый элемент, как и блок "Все версии" на сайте.
+      const resp = await fetch('https://api.github.com/repos/GUSSIak/ModeLEX/releases?per_page=1');
+      const ms = Math.round(performance.now() - t0);
+      if (!resp.ok) throw new Error('bad status');
+      const data = await resp.json();
+      return { ok: true, ms, tag: (data[0] && data[0].tag_name) || '—' };
+    } catch {
+      return { ok: false, ms: Math.round(performance.now() - t0), tag: null };
+    }
+  })();
+
+  // Рамка строится programmatically под фиксированную внутреннюю ширину —
+  // раньше пробелы подбирались вручную и "плыли" на разной длине текста.
+  const BOX_WIDTH = 42;
+  function boxRow(text) {
+    const t = text.length > BOX_WIDTH ? text.slice(0, BOX_WIDTH) : text;
+    return '   │ ' + t.padEnd(BOX_WIDTH) + ' │';
+  }
+  const boxTop = '   ┌' + '─'.repeat(BOX_WIDTH + 2) + '┐';
+  const boxBottom = '   └' + '─'.repeat(BOX_WIDTH + 2) + '┘';
+
+  const lines = [
+    { text: '$ ./exploit.sh --target modlex.internal', cls: 'prompt' },
+    ...pickRandom(pool, 3).map((text) => ({ text, cls: 'dim' })),
+    { text: '[····] Подбор доступа', cls: 'ok', progress: true },
+    { text: '  [+] Доступ получен', cls: 'ok' },
+    { text: '$ ssh deploy@modlex-prod-01.internal', cls: 'prompt' },
+    { text: '  [*] Рукопожатие SSH (ed25519)... успешно', cls: 'dim' },
+    { text: 'deploy@modlex-prod-01:~$ find /var/www -maxdepth 2 -type d', cls: 'prompt' },
+    { text: '  /var/www/modlex', cls: 'dim' },
+    { text: '  /var/www/modlex/site', cls: 'dim' },
+    { text: '  /var/www/modlex/releases', cls: 'dim' },
+    { text: 'deploy@modlex-prod-01:~$ cd /var/www/modlex/site && tree -L 2', cls: 'prompt' },
+    { text: '  site/', cls: 'dim' },
+    { text: '  ├── index.html', cls: 'dim' },
+    { text: '  ├── styles.css', cls: 'dim' },
+    { text: '  ├── script.js', cls: 'dim' },
+    { text: '  └── assets/screenshots/', cls: 'dim' },
+    { text: 'deploy@modlex-prod-01:~$ docker compose up -d modlex-site', cls: 'prompt' },
+    { text: '  [*] Поднятие контейнера modlex-site...', cls: 'dim' },
+    { text: '__CONTAINER__', cls: 'ok', dynamic: 'container' },
+    { text: '  [*] Выгрузка исходного кода сайта...', cls: 'dim' },
+    { text: '      ✓ index.html', cls: 'dim' },
+    { text: '      ✓ styles.css', cls: 'dim' },
+    { text: '      ✓ script.js', cls: 'dim' },
+    { text: '__RELEASE__', cls: 'ok', dynamic: 'release' },
+    { text: '  [!] Обнаружено шифрование содержимого', cls: 'warn' },
+    { text: '  [*] Инициализация дешифратора...', cls: 'dim' },
+    { text: '', cls: 'dim' },
+    { text: boxTop, cls: 'dim' },
+    { text: boxRow(''), cls: 'dim' },
+    { text: boxRow('Дешифровка сигнатуры:'), cls: 'ok' },
+    { text: boxRow(''), cls: 'dim' },
+    { text: boxBottom, cls: 'dim' },
+  ];
+
+  let li = 0, ci = 0;
+
+  function randomHex(len) {
+    const chars = '0123456789abcdef';
+    let out = '';
+    for (let i = 0; i < len; i++) out += chars[Math.floor(Math.random() * chars.length)];
+    return out;
+  }
+
+  async function resolveDynamic(line) {
+    if (line.dynamic === 'release') {
+      const ping = await pingPromise;
+      line.text = ping.tag
+        ? `  [+] Метаданные получены: modlex-launcher ${ping.tag} (${ping.ms} мс)`
+        : '  [!] Сервер метаданных недоступен, продолжаем офлайн';
+    } else if (line.dynamic === 'container') {
+      line.text = `  [+] Контейнер запущен (id: ${randomHex(12)})`;
+    }
+  }
+
+  function animateProgress(span, onDone) {
+    const width = 10;
+    let filled = 0;
+    const bar = setInterval(() => {
+      filled++;
+      const pct = Math.min(100, Math.round((filled / width) * 100));
+      const barStr = '█'.repeat(filled) + '·'.repeat(Math.max(0, width - filled));
+      span.textContent = `[${barStr}] Раздача статики ${pct}%`;
+      scrollToBottom();
+      if (filled >= width) {
+        clearInterval(bar);
+        setTimeout(onDone, 120);
+      }
+    }, 55);
+  }
+
+  async function typeNext() {
+    if (li >= lines.length) {
+      await revealLogo();
+      finish();
+      return;
+    }
+    const line = lines[li];
+
+    if (line.dynamic && ci === 0) {
+      await resolveDynamic(line);
+    }
+
+    if (ci === 0) {
+      log.innerHTML += `<span class="${line.cls}"></span>\n`;
+    }
+    const spans = log.querySelectorAll('span:not(.boot-cursor)');
+    const currentSpan = spans[spans.length - 1];
+
+    if (line.progress && ci === 0) {
+      ci = line.text.length + 1;
+      animateProgress(currentSpan, () => { li++; ci = 0; setTimeout(typeNext, 120); });
+      return;
+    }
+
+    if (ci <= line.text.length) {
+      currentSpan.textContent = line.text.slice(0, ci);
+      scrollToBottom();
+      ci++;
+      setTimeout(typeNext, line.cls === 'prompt' ? 28 : 8);
+    } else {
+      li++;
+      ci = 0;
+      setTimeout(typeNext, 70);
+    }
+  }
+
+  // Финальная "расшифровка" логотипа — символы вперемешку схлопываются
+  // в "MODLEX", а не просто печатаются построчно как остальной лог.
+  function revealLogo() {
+    return new Promise((resolve) => {
+      const target = 'MODLEX';
+      const glyphs = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ#%&$*';
+      const wrap = document.createElement('div');
+      wrap.style.cssText = 'margin-top:1.2rem;font-size:1.8rem;font-weight:700;letter-spacing:0.15em;color:var(--accent);font-family:"JetBrains Mono",monospace;';
+      log.appendChild(wrap);
+
+      let frame = 0;
+      const totalFrames = 18;
+      const settleAt = target.split('').map((_, i) => Math.round((i + 1) / target.length * totalFrames));
+
+      const iv = setInterval(() => {
+        frame++;
+        let out = '';
+        for (let i = 0; i < target.length; i++) {
+          if (frame >= settleAt[i]) out += target[i];
+          else out += glyphs[Math.floor(Math.random() * glyphs.length)];
+        }
+        wrap.textContent = out;
+        scrollToBottom();
+        if (frame >= totalFrames) {
+          clearInterval(iv);
+          setTimeout(resolve, 500);
+        }
+      }, 45);
+    });
+  }
+
+  typeNext();
+})();
+
+// ============================================================
+// 8. CONSOLE.LOG ПАСХАЛКА (та же, что в варианте C)
+// ============================================================
+(function consoleEasterEgg() {
+  console.log(
+    '%c ModLEX %c форк Modrinth App ',
+    'background:#a855f7;color:#fff;font-weight:bold;padding:4px 8px;border-radius:4px 0 0 4px;font-size:14px;',
+    'background:#232a35;color:#ece8e1;padding:4px 8px;border-radius:0 4px 4px 0;font-size:14px;'
+  );
+  console.log(
+    '%cИщешь пасхалки? Загляни в консоль разработчика чаще — а лучше просто зайди на наш Discord: https://discord.gg/CGAPjG9xJa',
+    'color:#8b9099;font-family:monospace;font-size:12px;'
+  );
+})();
+
+// ============================================================
+// 9. РАСШИФРОВКА ПОЧТИ ВСЕГО ТЕКСТА (+ иконок) ПРИ СКРОЛЛЕ
+// ============================================================
+// Продолжение "взлома" из бута — тем же приёмом, что и лого ModLEX в конце
+// бута (см. revealLogo выше), но теперь почти на всём тексте сайта, не
+// только заголовках секций. Работает по ТЕКСТОВЫМ УЗЛАМ (не innerHTML), а
+// не по всему элементу целиком — чтобы не затирать вложенные бейджи/иконки
+// (например "Скоро" внутри <h4>, ⌄-стрелку внутри кнопки FAQ).
+// Намеренно НЕ трогаем: верхнюю навигацию и её иконки (должны быть сразу
+// читаемы и кликабельны), кнопки/ссылки скачивания и Discord в хиро.
+(function decryptEverything() {
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduceMotion) return;
+
+  const glyphs = '!@#$%^&*_+-=<>?01アイウエオカキクケコ';
+  function randGlyph() { return glyphs[Math.floor(Math.random() * glyphs.length)]; }
+
+  const originalOf = new WeakMap();
+
+  function textNodesOf(el) {
+    return Array.from(el.childNodes).filter((n) => n.nodeType === 3 && n.textContent.trim().length > 0);
+  }
+
+  function obfuscateNode(node) {
+    if (!originalOf.has(node)) originalOf.set(node, node.textContent);
+    node.textContent = node.textContent.replace(/\S/g, randGlyph);
+  }
+
+  function decryptNode(node) {
+    const target = originalOf.get(node);
+    // Уже расшифрован (текущий текст совпадает с оригиналом) — выходим.
+    // Без этой проверки два независимых триггера (наблюдатель за скроллом +
+    // страховочный fallback) иногда запускали расшифровку одного и того же
+    // узла дважды подряд — снаружи это выглядело как "моргание" обратно в
+    // шифр и повторная расшифровка ("багованно моментами").
+    if (target === undefined || node.textContent === target) return;
+    const chars = target.split('');
+    const totalFrames = 20;
+    let frame = 0;
+    const settleAt = chars.map((_, i) => Math.round((i + 1) / chars.length * totalFrames));
+    const iv = setInterval(() => {
+      frame++;
+      let out = '';
+      for (let i = 0; i < chars.length; i++) {
+        out += (chars[i] === ' ' || frame >= settleAt[i]) ? chars[i] : randGlyph();
+      }
+      node.textContent = out;
+      if (frame >= totalFrames) { clearInterval(iv); node.textContent = target; }
+    }, 45);
+  }
+
+  function obfuscateEl(el) { textNodesOf(el).forEach(obfuscateNode); }
+  function decryptEl(el) { textNodesOf(el).forEach(decryptNode); }
+
+  // Пока бут не закончился — откладываем реальный вызов. IntersectionObserver
+  // не знает, что оверлей визуально всё перекрывает: то, что геометрически
+  // уже во вьюпорте (например, вся hero-секция), считается "видимым" и
+  // расшифровалось бы прямо во время бута, если не придержать.
+  const pendingUntilBootDone = [];
+  function whenBootDone(fn) {
+    if (window.__modlexBootDone) fn();
+    else pendingUntilBootDone.push(fn);
+  }
+  window.addEventListener('modlex:boot-done', () => {
+    pendingUntilBootDone.splice(0).forEach((fn) => fn());
+  });
+
+  // "Публичный" интерфейс — используется и ниже для neofetch-значений,
+  // которые приходят асинхронно (см. loadData()).
+  window.__modlexScramble = { obfuscateEl, decryptEl, obfuscateNode, decryptNode, originalOf, randGlyph, whenBootDone };
+
+  // --- обычный текст: секции, карточки, FAQ, футер, статичные бейджи ---
+  const staticSelector = [
+    '.section-head h2', '.section-head p',
+    '.feature-card h3', '.feature-card p',
+    '.roadmap-item h4', '.roadmap-item p', '.soon-tag',
+    '.faq-q',
+    '.gallery-cap',
+    'footer .foot-title', 'footer a', '.foot-note',
+    '.free-note',
+    '.neofetch dt',
+  ].join(', ');
+  const staticTargets = Array.from(document.querySelectorAll(staticSelector));
+  staticTargets.forEach(obfuscateEl);
+
+  // FAQ-ответы — намеренно НЕ в общем списке выше: они должны шифроваться
+  // заново при каждом закрытии аккордеона и расшифровываться при каждом
+  // открытии (см. секцию 5 ниже), а не раскрываться один раз навсегда.
+  const faqAnswers = Array.from(document.querySelectorAll('.faq-a p'));
+  faqAnswers.forEach(obfuscateEl);
+
+  const textObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      textObserver.unobserve(entry.target);
+      whenBootDone(() => setTimeout(() => decryptEl(entry.target), 80 + Math.random() * 250));
+    });
+  }, { threshold: 0.3, rootMargin: '0px 0px -8% 0px' });
+  staticTargets.forEach((el) => textObserver.observe(el));
+
+  // Страховка: IntersectionObserver иногда не успевает сработать (вкладка
+  // была не в фокусе на старте, вернулись из спящего режима и т.п.) — тогда
+  // текст навсегда остаётся "зашифрованным". Дублируем проверку по scroll,
+  // но не трогаем то, что ещё реально не долистали — расшифровка по мере
+  // пролистывания должна остаться как есть.
+  function isRevealed(el) {
+    return textNodesOf(el).every((n) => !originalOf.has(n) || n.textContent === originalOf.get(n));
+  }
+  function revealIfVisibleAndStuck(el) {
+    if (isRevealed(el)) return;
+    const r = el.getBoundingClientRect();
+    if (r.bottom > 0 && r.top < window.innerHeight) {
+      textObserver.unobserve(el);
+      decryptEl(el);
+    }
+  }
+  let fallbackArmed = false;
+  let fallbackTicking = false;
+  function runFallbackSweep() {
+    staticTargets.forEach(revealIfVisibleAndStuck);
+  }
+  whenBootDone(() => {
+    fallbackArmed = true;
+    runFallbackSweep();
+  });
+  window.addEventListener('scroll', () => {
+    if (!fallbackArmed || fallbackTicking) return;
+    fallbackTicking = true;
+    requestAnimationFrame(() => { runFallbackSweep(); fallbackTicking = false; });
+  }, { passive: true });
+
+  // --- иконки карточек: прячем реальную, коротким импульсом "перебираем"
+  // символы вместо неё ИМЕННО в момент появления карточки в зоне видимости
+  // (а не постоянно с загрузки страницы — незачем крутить 7 интервалов
+  // фоном, пока пользователь ещё наверху и, может, долго не долистает).
+  const cardsWithIcons = Array.from(document.querySelectorAll('.feature-card, .roadmap-item'));
+  cardsWithIcons.forEach((card) => {
+    const wrap = card.querySelector('.ico');
+    const svg = wrap && wrap.querySelector('svg');
+    if (!wrap || !svg) return;
+    wrap.style.position = 'relative';
+    svg.style.visibility = 'hidden';
+  });
+
+  function iconFlourish(card) {
+    const wrap = card.querySelector('.ico');
+    const svg = wrap && wrap.querySelector('svg');
+    if (!wrap || !svg) return;
+    const placeholder = document.createElement('span');
+    placeholder.setAttribute('aria-hidden', 'true');
+    placeholder.style.cssText = 'position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:"JetBrains Mono",monospace;font-size:14px;color:currentColor;';
+    placeholder.textContent = randGlyph();
+    wrap.appendChild(placeholder);
+    const iv = setInterval(() => { placeholder.textContent = randGlyph(); }, 70);
+    setTimeout(() => {
+      clearInterval(iv);
+      placeholder.remove();
+      svg.style.visibility = 'visible';
+    }, 450);
+  }
+
+  const cardObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      cardObserver.unobserve(entry.target);
+      whenBootDone(() => setTimeout(() => iconFlourish(entry.target), 150 + Math.random() * 200));
+    });
+  }, { threshold: 0.3 });
+  cardsWithIcons.forEach((el) => cardObserver.observe(el));
+
+  // --- палитра neofetch: сначала приглушённые квадраты, потом настоящие
+  // цвета по очереди — цвета всегда настоящие из палитры бренда, "перебора"
+  // случайных оттенков нет намеренно (иначе выглядело бы не канонично).
+  const swatchRow = document.getElementById('neofetch-swatches');
+  if (swatchRow) {
+    const swatches = Array.from(swatchRow.querySelectorAll('span'));
+    const realColors = swatches.map((s) => s.dataset.color);
+    swatches.forEach((s) => { s.style.background = 'var(--surface-3)'; });
+
+    const swatchObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        swatchObserver.unobserve(entry.target);
+        whenBootDone(() => {
+          swatches.forEach((s, i) => {
+            setTimeout(() => { s.style.background = realColors[i]; }, 200 + i * 90);
+          });
+        });
+      });
+    }, { threshold: 0.3 });
+    swatchObserver.observe(swatchRow);
+  }
+})();
+
+// ============================================================
+// 10. СТАТУС-БАР (аптайм в стиле `uptime`, часы, текущий раздел)
+// ============================================================
+(function statusBar() {
+  const bar = document.getElementById('statusbar');
+  if (!bar) return;
+  const clockEl = document.getElementById('sb-clock');
+  const pathEl = document.getElementById('sb-path');
+  const uptimeEl = document.getElementById('sb-uptime');
+
+  const startedAt = performance.now();
+  // "Реалистичная" load average — фиксируется один раз за сессию,
+  // а не дёргается случайно каждую секунду (иначе выглядит фальшиво).
+  const load = [0.15 + Math.random() * 0.5, 0.15 + Math.random() * 0.5, 0.15 + Math.random() * 0.5]
+    .sort((a, b) => b - a)
+    .map((n) => n.toFixed(2));
+
+  function formatUptime(ms) {
+    const totalSec = Math.floor(ms / 1000);
+    const min = Math.floor(totalSec / 60);
+    const sec = totalSec % 60;
+    const label = min > 0 ? `${min} min` : `${sec} sec`;
+    return `up ${label},  load average: ${load.join(', ')}`;
+  }
+
+  function tick() {
+    const now = new Date();
+    clockEl.textContent = now.toLocaleTimeString('ru-RU', { hour12: false });
+    uptimeEl.textContent = formatUptime(performance.now() - startedAt);
+  }
+  tick();
+  setInterval(tick, 1000);
+
+  const sections = ['top', 'features', 'roadmap', 'screenshots', 'faq', 'releases'];
+  const labels = { top: '~/', features: '~/features', roadmap: '~/roadmap', screenshots: '~/screenshots', faq: '~/faq', releases: '~/releases' };
+  let pathTicking = false;
+  function updatePath() {
+    let current = 'top';
+    for (const id of sections) {
+      const el = document.getElementById(id);
+      if (!el) continue;
+      if (el.getBoundingClientRect().top < window.innerHeight * 0.4) current = id;
+    }
+    pathEl.textContent = labels[current];
+  }
+  updatePath();
+  window.addEventListener('scroll', () => {
+    if (pathTicking) return;
+    pathTicking = true;
+    requestAnimationFrame(() => { updatePath(); pathTicking = false; });
+  }, { passive: true });
+})();
+
+// ============================================================
+// 11. MAN-СТРАНИЦА — ПАСХАЛКА (спрятана в точке в конце футера)
+// ============================================================
+(function manPageEasterEgg() {
+  const trigger = document.getElementById('man-trigger');
+  const page = document.getElementById('man-page');
+  const closeBtn = document.getElementById('man-close');
+  if (!trigger || !page) return;
+
+  function open() {
+    page.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function close() {
+    page.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  trigger.addEventListener('click', open);
+  closeBtn.addEventListener('click', close);
+  window.addEventListener('keydown', (e) => {
+    if (!page.classList.contains('open')) return;
+    if (e.key === 'q' || e.key === 'Q' || e.key === 'Escape') close();
+  });
+})();
+
+// ============================================================
+// 12. КОНСОЛЬНЫЙ РЕЖИМ — весь сайт монохромом, будто в терминале
+// ============================================================
+(function consoleMode() {
+  const toggle = document.getElementById('console-toggle');
+  if (!toggle) return;
+  const root = document.documentElement;
+  const STORAGE_KEY = 'modlex-console-mode';
+
+  function apply(on) {
+    root.classList.toggle('console-mode', on);
+    toggle.setAttribute('aria-pressed', String(on));
+  }
+
+  let saved = null;
+  try { saved = localStorage.getItem(STORAGE_KEY); } catch {}
+  apply(saved === '1');
+
+  toggle.addEventListener('click', () => {
+    const next = !root.classList.contains('console-mode');
+    apply(next);
+    try { localStorage.setItem(STORAGE_KEY, next ? '1' : '0'); } catch {}
+    renderConsoleImages();
+  });
+
+  if (root.classList.contains('console-mode')) renderConsoleImages();
+
+  // ============================================================
+  // 13. "КОНСОЛЬНЫЙ" РЕНДЕР КАРТИНОК — вместо фото просто перекрашенного
+  // фильтром, честно пикселизуем изображение и красим яркость каждого
+  // блока в зелёный (как ASCII/блочный рендер картинки в реальном
+  // терминале — chafa/viu). Строится один раз лениво, дальше только
+  // показывается/прячется через CSS.
+  // ============================================================
+  function consolifyImage(img, cols) {
+    if (img.dataset.consolified) return;
+    img.dataset.consolified = '1';
+    const canvas = document.createElement('canvas');
+    canvas.className = 'consolify-canvas';
+    img.insertAdjacentElement('afterend', canvas);
+
+    function render() {
+      const w = img.naturalWidth, h = img.naturalHeight;
+      if (!w || !h) return;
+      const smallW = cols;
+      const smallH = Math.max(1, Math.round(cols * h / w));
+      const small = document.createElement('canvas');
+      small.width = smallW;
+      small.height = smallH;
+      const sctx = small.getContext('2d');
+      sctx.drawImage(img, 0, 0, smallW, smallH);
+      const data = sctx.getImageData(0, 0, smallW, smallH).data;
+
+      canvas.width = w;
+      canvas.height = h;
+      const ctx = canvas.getContext('2d');
+      ctx.fillStyle = '#000';
+      ctx.fillRect(0, 0, w, h);
+      const cellW = w / smallW;
+      const cellH = h / smallH;
+      for (let y = 0; y < smallH; y++) {
+        for (let x = 0; x < smallW; x++) {
+          const i = (y * smallW + x) * 4;
+          const lum = (0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2]) / 255;
+          ctx.fillStyle = `rgba(90,255,140,${lum.toFixed(3)})`;
+          ctx.fillRect(Math.floor(x * cellW), Math.floor(y * cellH), Math.ceil(cellW), Math.ceil(cellH));
+        }
+      }
+    }
+
+    if (img.complete && img.naturalWidth) render();
+    else img.addEventListener('load', render, { once: true });
+  }
+
+  function renderConsoleImages() {
+    const heroImg = document.querySelector('.app-window img');
+    if (heroImg) consolifyImage(heroImg, 90);
+    document.querySelectorAll('.gallery-item img').forEach((img) => consolifyImage(img, 48));
+  }
+})();
 </script>
 
 </body>
