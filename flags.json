@@ -5,6 +5,10 @@
 			"locked": true,
 			"message": "Эта функция временно отключена разработчиком."
 		},
+		"curseforge_platform_v2": {
+			"enabled": true,
+			"locked": true
+		},
 		"beta_tester_gate": {
 			"enabled": false
 		},
