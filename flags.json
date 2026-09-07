@@ -21,5 +21,9 @@
 			"enabled": false,
 			"locked": true
 		}
+	},
+	"update": {
+		"min_required_version": null,
+		"message": null
 	}
 }
